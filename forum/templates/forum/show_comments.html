@@ -1,0 +1,35 @@
+{% extends 'forum/base.html' %}
+
+{% block header %}
+  <h2>{{ post }}</a> <small>  --查看评论</small></h2>
+{% endblock header%}
+
+{% block content %}
+
+  <ul class="list-inline text-right">
+    <li class="pull-left"><b>所有评论：</b></li>
+    <li><a href="{% url 'forum:new_comment' post.id %}" class="btn btn-primary btn-sm text-right" role="button">添加评论</a></li>
+  </ul>
+
+  {% for comment in comments %}
+    <div class="panel panel-default">
+      <div class="panel-body">
+        {{ comment.text|linebreaks }}
+      </div>
+      <div class="panel-footer">
+        <ul class="list-inline text-right">
+            <li>{{ comment.date_added|date:'M d, Y H:i' }} by {{comment.owner}}</li>
+            <li><a href="{% url 'forum:response_comment' comment.id %}" class="btn btn-primary btn-sm text-right" role="button">
+              回复</a></li>
+            <li><a href="{% url 'forum:del_comment' comment.id %}" class="btn btn-primary btn-sm text-right" role="button">
+              删除</a></li>
+        </ul>
+      </div>
+    </div><!-- panel -->
+    {% empty %}
+      当前文章还没有评论，快去抢沙发吧！
+  {% endfor %}
+  
+{% endblock content %}
+
+

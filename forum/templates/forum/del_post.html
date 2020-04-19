@@ -1,0 +1,14 @@
+{% extends "forum/base.html" %}
+
+{% block header %}
+  <h2>删除文章</h2>
+{% endblock header%}
+
+{% block content %}
+  
+  <h2>
+      {{info}}
+  </h2>
+  <p><a href="{% url 'forum:topic' plate.id %}" class="btn btn-success" role="button">回到板块</a></p>
+
+{% endblock content %}

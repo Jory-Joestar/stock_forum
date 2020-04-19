@@ -1,0 +1,40 @@
+{% extends "forum/base.html" %}
+{% load static %}
+
+{% block header %}
+  <div class="container">
+    <div class="row clearfix">
+      <div class="col-md-12 column">
+        <div class="jumbotron">
+          <h1>Hello！</h1>
+          <h2>
+            Welcome to our stock forum.
+        </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock header %}
+
+{% block content%}
+  <h3>
+      <a href="{% url 'users:register' %}">创建一个账号。</a> 加入社区
+  </h3>
+  <h3>
+    分享投资经验，掌握资本市场动态
+  </h3>
+  {% for info in informations %}
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3>
+          通知 <small>--管理员: {{info.owner}}, 发布时间: {{ info.date_added|date:'M d, Y H:i' }}</small>
+        </h3>
+      </div>
+      <div class="panel-body">
+        {{ info.text|linebreaks }}
+      </div>
+    </div><!-- panel -->
+    {% empty %}
+  {% endfor %}
+{% endblock content %}

@@ -1,0 +1,18 @@
+{% extends "forum/base.html" %}
+
+{% block header %}
+  <h2>添加评论</h2>
+{% endblock header%}
+
+{% block content %}
+  
+  <h4><p>回到评论区-<a href="{% url 'forum:show_comments' post.id %}">{{ post }}</a></p></h4>
+
+  <p>添加你的评论:</p>
+  <form action="{% url 'forum:new_comment' post.id %}" method="POST">
+      {% csrf_token %}
+      {{form.as_p}}
+      <button name="submit">添加</button>
+  </form>
+
+{% endblock content%}

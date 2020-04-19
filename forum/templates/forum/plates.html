@@ -1,0 +1,24 @@
+{% extends "forum/base.html" %}
+
+{% block header %}
+  <h1>所有板块</h1>
+{% endblock header %}
+
+{% block content %}
+
+  <ul class="list-group">
+    {% for plate in plates %}
+      <li class="list-group-item">
+          <h3>
+            <a href="{% url 'forum:plate' plate.id %}">{{ plate }}</a>
+          </h3>
+      </li>
+    {% empty %}
+      <li>当前还没有任何板块</li>
+    {% endfor %}
+  </ul>
+
+  <h3><a href="{% url 'forum:new_plate' %}" class="btn btn-primary btn-lg btn-block" role="button">创建新的板块</a></h3>
+
+
+{% endblock content %}
