@@ -33,6 +33,7 @@ tushare==1.2.54
 >>    /urls.py：定义url模式，将访问定向到应用或视图函数  
 >>    /wsgi.py:本地运行不需要改动，django自带文件  
 >>    /asgi.py:同上  
+
 >/forum：django项目应用，论坛功能实现  
 >>    /migrations:有关数据库的设定，用于迁移数据库  
 >>    /templates/forum:HTML模板文件夹  
@@ -43,6 +44,7 @@ tushare==1.2.54
 >>    /test.py:测试模块，没动  
 >>    /urls.py:定义url模式，将访问定向到视图函数  
 >>    /views.py：定义视图函数，处理用户的访问和请求  
+
 >/users:django项目应用，实现用户管理  
 >>    /migrations:有关数据库的设定，用于迁移数据库  
 >>    /templates/forum:HTML模板文件夹  
@@ -53,9 +55,11 @@ tushare==1.2.54
 >>    /test.py:测试模块，没动  
 >>    /urls.py:定义url模式，将访问定向到视图函数  
 >>    /views.py：定义视图函数，处理用户的访问和请求  
+
 >/extends:拓展功能模块  
 >>    /data：数据源模块  
 >>>        /stock_basic.py：从API获得股票价格数据，生产数据集，k线图  
 >>    /get_price.py：获得股票价格，供forum应用中的视图函数调用  
+
 >/manage.py:django项目控制模块，没动  
 
