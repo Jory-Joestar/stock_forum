@@ -26,4 +26,6 @@ urlpatterns=[
     url(r'^del_post/(?P<post_id>\d+)/$',views.del_post,name='del_post'),
     #查询股票价格
     url(r'^get_stock_price/$',views.get_stock_price,name='get_stock_price'),
+    #测试展示南京银行K线图
+    #url(r'^get_nj_bank_test/$', views.nj_bank_test, name='get_nj_bank_test'),
 ]
