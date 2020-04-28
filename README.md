@@ -1,5 +1,7 @@
 # stock_forum
-软件工程课的团队项目
+软件工程课的团队项目  
+项目博客：
+[https://blog.csdn.net/Seb_Veeeettle/article/details/105749143](https://blog.csdn.net/Seb_Veeeettle/article/details/105749143)
 
 # Change Log
 v0.0.0 (2020/4/19 20:30)  
