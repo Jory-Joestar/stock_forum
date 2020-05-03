@@ -1,7 +1,5 @@
-from extends.data.stock_basic import select_basic_name
+from extends.data.stock_basic import select_basic_name,get_related_name
 import tushare as ts
-from pyecharts import Kline
-import pandas as pd
 
 class GetPrice():
     def __init__(self):
@@ -12,6 +10,19 @@ class GetPrice():
     def by_name(self,stock_name,date):
         stock=select_basic_name(stock_name,self.pro)
         return stock.get_price(date,date,self.pro)
+
+    def current_price(self, stock_name):
+        stock = select_basic_name(stock_name, self.pro)
+        return stock.get_current_price()
+
+    def draw_kline(self, stock_name, start_date, end_date):
+        stock = select_basic_name(stock_name, self.pro)
+        stock.draw_kline(start_date, end_date, self.pro)
+        return
+
+    def get_related(self, input_name):
+        return get_related_name(input_name, self.pro)
+
 
 if __name__ == "__main__":
     getprise=GetPrice()

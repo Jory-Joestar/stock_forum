@@ -3,8 +3,14 @@ from django.http import HttpResponseRedirect,Http404,HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Plate,Post,Comment,Information
-from .forms import PlateForm,PostForm,CommentForm,GetpriceForm
+from .forms import PlateForm,PostForm,CommentForm,GetpriceForm,GetstockForm,GetgapForm
 from extends.get_price import GetPrice
+#使用中间件时，有些视图可能不需要设置X-Frame-Options标头。对于这些情况，可以使用视图装饰器告知中间件不要设置标头
+from django.views.decorators.clickjacking import xframe_options_exempt
+from users.models import UserProfile,FollowingStocks,User
+#对话框返回信息
+from django.contrib import messages
+import datetime
 
 
 # Create your views here.
@@ -25,9 +31,17 @@ def plates(request):
 def plate(request,plate_id):
     '''显示某板块内的所有po文'''
     plate=Plate.objects.get(id=plate_id)
+    #获取用户对于当前板块的关注状态
+    user=request.user
+    profile=UserProfile.objects.get(owner=user)
+    followed=False
+    if plate in profile.following_plate.all():
+        followed=True
+    else:
+        followed=False
     #确认请求的主题及其所有的条目
     posts=Post.objects.filter(plate=plate).order_by('-date_added')
-    context={'plate':plate,'posts':posts}
+    context={'plate':plate,'posts':posts,'followed':followed}
     return render(request,'forum/plate.html',context)
 
 @login_required
@@ -68,12 +82,21 @@ def new_post(request,plate_id):
 
 
 @login_required
-def show_comments(request,post_id):
-    '''评论页面，显示某文章的所有评论，添加评论，回复'''
+def show_post(request,post_id):
+    '''文章详情页面，显示文章内容，文章的所有评论，添加评论，回复'''
     post=Post.objects.get(id=post_id)
+    plate=post.plate
+    #获取用户的关注状态
+    user=request.user
+    profile=UserProfile.objects.get(owner=user)
+    followed=False
+    if post in profile.following_post.all():
+        followed=True
+    else:
+        followed=False
     comments=Comment.objects.filter(post=post).order_by('-date_added')
-    context={'post':post,'comments':comments}
-    return render(request,'forum/show_comments.html',context)
+    context={'post':post,'comments':comments,'plate':plate,'followed':followed}
+    return render(request,'forum/show_post.html',context)
 
 
 @login_required
@@ -91,7 +114,7 @@ def new_comment(request,post_id):
             new_comment.post=post
             new_comment.owner=request.user
             new_comment.save()
-            return HttpResponseRedirect(reverse('forum:show_comments',
+            return HttpResponseRedirect(reverse('forum:show_post',
             args=[post.id])) 
     context={'post':post,'form':form}
     return render(request,'forum/new_comment.html',context)
@@ -114,9 +137,9 @@ def response_comment(request,comment_id):
             new_response.owner=request.user
             new_response.text='回复：'+new_response.text+'\n------------------ Original ------------------\n'+str(comment.owner)+':'+comment.text
             new_response.save()
-            return HttpResponseRedirect(reverse('forum:show_comments',
+            return HttpResponseRedirect(reverse('forum:show_post',
             args=[post.id]))
-    context={'comment':comment,'form':form,'entry':post}
+    context={'comment':comment,'form':form,'post':post}
     return render(request,'forum/response_comment.html',context)
 
 @login_required
@@ -140,17 +163,27 @@ def del_comment(request,comment_id):
     return render(request,'forum/del_comment.html',context)
 
 @login_required
+def del_plate(request,plate_id):
+    '''删除板块'''
+    plate=Plate.objects.get(id=plate_id)
+    if plate.owner==request.user:
+        plate.delete()
+        messages.success(request,"删除成功")
+    else:
+        messages.success(request,"删除失败，没有权限")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
 def del_post(request,post_id):
-    '''删除一条日志'''
+    '''删除文章'''
     post=Post.objects.get(id=post_id)
     plate=post.plate
     if post.owner==request.user:
         post.delete()
-        info='日志删除成功！'
+        messages.success(request,"删除成功")
     else:
-        info='日志删除失败。 没有删除权限。'
-    context={'info':info,'plate':plate}
-    return render(request,'forum/del_post.html',context)
+        messages.success(request,"删除失败，没有权限")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required
 def get_stock_price(request):
@@ -176,3 +209,154 @@ def get_stock_price(request):
     context={'form':form,'result':result}
     return render(request,'forum/get_stock_price.html',context)
 
+@login_required
+def get_stock(request):
+    '''查询股票视图'''
+    if request.method != 'POST':
+        form = GetstockForm()
+    else:
+        form = GetstockForm(data=request.POST)
+        if form.is_valid():
+            stock_name = form.cleaned_data['stock_name']
+            return HttpResponseRedirect(reverse('forum:get_stock_result', args=[stock_name]))
+
+    context = {'form': form}
+    return render(request, 'forum/get_stock.html', context)
+
+@login_required
+def get_stock_result(request,stock_name):
+    '''查询结果页面'''
+    refer=GetPrice()
+    results=refer.get_related(stock_name)
+    context={'results':results}
+    return render(request,'forum/get_stock_result.html',context)
+
+@login_required
+def stock_info(request,stock_name):
+    '''股票详情页面'''
+
+    #获取用户的关注状态
+    user=request.user
+    profile=UserProfile.objects.get(owner=user)
+    following=FollowingStocks.objects.get(owner=profile)
+    followed=False
+    if following.stock_exist(stock_name):
+        followed=True
+    else:
+        followed=False
+
+    refer=GetPrice()
+    current_price=refer.current_price(stock_name)
+
+    start_date=(datetime.date.today() + datetime.timedelta(days = -7)).strftime("%Y%m%d")
+    end_date=(datetime.date.today() + datetime.timedelta(days = -1)).strftime("%Y%m%d")
+    #end_date=datetime.datetime.now().strftime('%Y%m%d')
+    print(start_date)
+    print(end_date)
+    refer.draw_kline(stock_name,start_date,end_date)
+
+    context={'stock_name':stock_name,'current_price':current_price,'followed':followed}
+    return render(request,'forum/stock_info.html',context)
+
+@xframe_options_exempt
+def custom_kline(request,stock_name):
+    '''用户自定时间段画k线图'''
+    result=False
+    info=''
+    if request.method!='POST':
+        #未提交查询内容，创建一个空表单
+        form=GetgapForm()
+    else:
+        #POST提交的数据，对数据进行处理
+        form=GetgapForm(data=request.POST)
+        if form.is_valid():
+            start_date=form.cleaned_data['start_date'].strftime('%Y%m%d')
+            end_date=form.cleaned_data['end_date'].strftime('%Y%m%d')
+            refer=GetPrice()
+            if refer.draw_kline(stock_name,start_date,end_date)!='':
+                result=True
+            else:
+                info='K线图导出失败'
+    context={'form':form,'result':result,'info':info,'stock_name':stock_name}
+    return render(request,'forum/custom_kline.html',context)
+
+@login_required
+def follow_plate(request,plate_id):
+    '''关注板块'''
+    user=request.user
+    profile=UserProfile.objects.get(owner=user)
+    plate=Plate.objects.get(id=plate_id)
+    if plate in profile.following_plate.all():
+        messages.success(request,"你已经关注了")
+    else:
+        profile.following_plate.add(plate)
+        messages.success(request,"关注成功")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def unfollow_plate(request,plate_id):
+    '''取消关注板块'''
+    user=request.user
+    profile=UserProfile.objects.get(owner=user)
+    plate=Plate.objects.get(id=plate_id)
+    if plate not in profile.following_plate.all():
+        messages.success(request,"你并没有关注")
+    else:
+        profile.following_plate.remove(plate)
+        messages.success(request,"成功取消关注")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def follow_post(request,post_id):
+    '''关注文章'''
+    user=request.user
+    profile=UserProfile.objects.get(owner=user)
+    post=Post.objects.get(id=post_id)
+    if post in profile.following_post.all():
+        messages.success(request,"你已经关注了")
+    else:
+        profile.following_post.add(post)
+        messages.success(request,"关注成功")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def unfollow_post(request,post_id):
+    '''取消关注文章'''
+    user=request.user
+    profile=UserProfile.objects.get(owner=user)
+    post=Post.objects.get(id=post_id)
+    if post not in profile.following_post.all():
+        messages.success(request,"你并没有关注")
+    else:
+        profile.following_post.remove(post)
+        messages.success(request,"成功取消关注")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def follow_stock(request,stock_name):
+    '''关注某只股票'''
+    #获取用户关注的股票列表对象
+    user=request.user
+    profile=UserProfile.objects.get(owner=user)
+    following=FollowingStocks.objects.get(owner=profile)
+    if following.add_stock(stock_name):
+        print(following.get_stock_list())
+        following.save()
+        messages.success(request,"关注成功")
+    else:
+        messages.success(request,"关注失败")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def unfollow_stock(request,stock_name):
+    '''取消关注某只股票'''
+    #获取用户关注的股票列表对象
+    user=request.user
+    profile=UserProfile.objects.get(owner=user)
+    following=FollowingStocks.objects.get(owner=profile)
+    if following.remove_stock(stock_name):
+        following.save()
+        messages.success(request,"取消关注成功")
+    else:
+        messages.success(request,"取消关注失败")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

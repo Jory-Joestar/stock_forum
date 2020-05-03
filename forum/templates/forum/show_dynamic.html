@@ -11,13 +11,13 @@
     <div class="panel panel-success">
         <div class="panel-heading">
           <ul class="list-inline text-right">
-            <li class="pull-left"><h4>{{post.plate.text}}<small>  --{{post.owner}},  {{ post.date_added|date:'M d, Y H:i' }}</small></h4></li>
-            <li><a href="{% url 'forum:show_comments' post.id %}" class="btn btn-primary btn-sm text-right" role="button">
-              查看评论</a></li>
+            <li class="pull-left"><h4><a href="{% url 'forum:plate' post.plate.id %}">{{post.plate.text}}</a><small>  --{{post.owner}},  {{ post.date_added|date:'M d, Y H:i' }}</small></h4></li>
+            <li><a href="{% url 'forum:show_post' post.id %}" class="btn btn-primary btn-sm text-right" role="button">
+              查看文章</a></li>
           </ul>
         </div>
         <div class="panel-body">
-          {{ post.text|linebreaks }}
+          <a href="{% url 'forum:show_post' post.id %}">{{ post }}</a>
         </div>
     </div><!-- panel -->
     {% empty %}

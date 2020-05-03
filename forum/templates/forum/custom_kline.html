@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+    </head>
+
+    <body>
+        <p>自定义K线图</p>
+        <form action="{% url 'forum:custom_kline' stock_name %}" method="POST">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button name="submit">查询</button>
+        </form>
+        {%  if result %}
+        <div>
+            <iframe src="{% static "klines/temp_custom.html" %}" name="" width="900" height="450" id=""></iframe>
+        </div>
+        {% else %}
+        <div>
+            <p>{{ info }}</p>
+        </div>
+        {% endif %}
+    </body>
+
+</html>

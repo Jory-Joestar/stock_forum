@@ -1,0 +1,17 @@
+{% extends "users/user_base.html" %}
+
+{% block header%}
+	<h2 align="center">个人中心</h2>
+{% endblock header %}
+
+{% block content %}
+<ul class="menu">
+	<li><a href="{% url 'users:user_information' user.id %}" target="htmlContent">个人资料</a></li>
+	<li><a href="{% url 'users:user_following' profile.id %}" target="htmlContent">我的关注</a></li>
+	<li><a href="{% url 'users:user_post' user.id %}" target="htmlContent">我的文章</a></li>
+	<li><a href="{% url 'users:user_plate' user.id %}" target="htmlContent">我的板块</a></li>
+	
+</ul>
+<iframe name="htmlContent" class="bodyHtml" src="{% url 'users:user_information' user.id %}" ></iframe>
+
+{% endblock content %}

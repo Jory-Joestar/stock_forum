@@ -1,7 +1,26 @@
 {% extends 'forum/base.html' %}
 
 {% block header %}
-  <h2>{{ post }}</a> <small>  --查看评论</small></h2>
+<div>
+  <h4>文章详情</h4>
+  <h4>板块：<a href="{% url 'forum:plate' plate.id %}">{{ plate }}</a></h4>
+  {% if followed %}
+  <a href="{% url 'forum:unfollow_post' post.id %}" class="btn btn-success pull-right" role="button">取消关注</a>
+  {% else %}
+  <a href="{% url 'forum:follow_post' post.id %}" class="btn btn-success pull-right" role="button">关注文章</a>
+  {% endif %}
+</div>
+  {% if messages %}
+        {% for msg in messages %}
+        <script>
+                alert('{{ msg.message }}');
+        </script>
+        {% endfor %}
+  {% endif %}
+<div class="panel-body">
+  {{ post.text|linebreaks }}
+  <div class="pull-right">  --{{post.owner}},  {{ post.date_added|date:'M d, Y H:i' }}</div>
+</div>
 {% endblock header%}
 
 {% block content %}

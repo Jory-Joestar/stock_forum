@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<!-- 关注的股票、文章、板块 -->
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			.main {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+			}
+
+			.div1 {
+
+				width: 32.5%;
+				height: 95%;
+				float: left;
+				border-right: #18D26E 5px solid;
+			}
+
+			.div2 {
+
+				width: 32.5%;
+				height: 95%;
+				float: left;
+			}
+
+			h3 {
+				text-align: center;
+			}
+
+			ul {
+				padding-left: 25px;
+			}
+			ul li{
+				height: 30px;
+			}
+
+			.divButton {
+				float: right;
+				
+				padding-right: 5%;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 具体条目的名称和链接href应该是自动填入的 需要后端写 -->
+		<!-- 移除的button需要接函数 定义id或者name -->
+		{% if messages %}
+        {% for msg in messages %}
+        <script>
+                alert('{{ msg.message }}');
+        </script>
+        {% endfor %}
+    	{% endif %}
+		<div class="main">
+			<div class="div1">
+				<h3>关注的股票</h3>
+				<br />
+				<ul>
+					{% for stock in stock_list %}
+					<li>
+						<a href="{% url 'forum:stock_info' stock %}" target="_top">{{ stock }}</a>
+						<div class="divButton"><a href="{% url 'forum:unfollow_stock' stock %}"><button type="submit">取消关注</button></a></div>
+					</li>
+					{% empty %}
+					<li>你还没有关注任何股票</li>
+					{% endfor %}
+				</ul>
+			</div>
+
+			<div class="div1">
+				<h3>关注的文章</h3>
+				<br />
+				<ul>
+					{% for post in following_post %}
+					<div>
+						<a href="{% url 'forum:show_post' post.id %}" target="_top">{{ post }}</a>
+						<div class="divButton"><a href="{% url 'forum:unfollow_post' post.id %}"><button type="submit">取消关注</button></a></div>
+					</div>
+					{% empty %}
+					<li>你还没有关注任何文章</li>
+					{% endfor %}
+				</ul>
+
+			</div>
+			<div class="div2">
+				<h3>关注的板块</h3>
+				<br />
+				<ul>
+					{% for plate in following_plate %}
+					<li>
+						<a href="{% url 'forum:plate' plate.id %}" target="_top">{{ plate }}</a>
+						<div class="divButton"><a href="{% url 'forum:unfollow_plate' plate.id %}"><button type="submit">取消关注</button></a></div>
+					</li>
+					{% empty %}
+					<li>你还没有关注任何板块</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>

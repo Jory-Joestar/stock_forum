@@ -7,13 +7,13 @@ urlpatterns=[
     #显示所有的板块
     url(r'^plates/$',views.plates,name='plates'),
     #特定板块的详细页面
-    url(r'^plates/(?P<plate_id>\d+)/$',views.plate,name='plate'),
+    url(r'^plate/(?P<plate_id>\d+)/$',views.plate,name='plate'),
     #用于添加新板块的网页
     url(r'^new_plate/$',views.new_plate,name='new_plate'),
     #用于添加新文章的页面
     url(r'^new_post/(?P<plate_id>\d+)/$',views.new_post,name='new_post'),
-    #显示当前文章所有评论的页面
-    url(r'^show_comments/(?P<post_id>\d+)/$',views.show_comments,name='show_comments'),
+    #查看文章详情页面
+    url(r'^show_post/(?P<post_id>\d+)/$',views.show_post,name='show_post'),
     #编写评论回复页面
     url(r'^response_comment/(?P<comment_id>\d+)/$',views.response_comment,name='response_comment'),
     #编写评论页面
@@ -22,10 +22,30 @@ urlpatterns=[
     url(r'^show_dynamic/$',views.show_dynamic,name='show_dynamic'),
     #删除某条评论
     url(r'^del_comment/(?P<comment_id>\d+)/$',views.del_comment,name='del_comment'),
+    #删除某个板块
+    url(r'^del_plate/(?P<plate_id>\d+)/$',views.del_plate,name='del_plate'),
     #删除某条文章
     url(r'^del_post/(?P<post_id>\d+)/$',views.del_post,name='del_post'),
     #查询股票价格
     url(r'^get_stock_price/$',views.get_stock_price,name='get_stock_price'),
-    #测试展示南京银行K线图
-    #url(r'^get_nj_bank_test/$', views.nj_bank_test, name='get_nj_bank_test'),
+    #查询股票
+    url(r'^get_stock/$',views.get_stock,name='get_stock'),
+    #查询结果
+    url(r'^get_stock_result/(?P<stock_name>\S+)/$',views.get_stock_result,name='get_stock_result'),
+    #股票详情页面
+    url(r'^stock_info/(?P<stock_name>\S+)/$',views.stock_info,name='stock_info'),
+    #用户自定义K线图
+    url(r'^custom_kline/(?P<stock_name>\S+)/$',views.custom_kline,name='custom_kline'),
+    #用户关注某个板块
+    url(r'^follow_plate/(?P<plate_id>\d+)/$',views.follow_plate,name='follow_plate'),
+    #取消关注某个板块
+    url(r'^unfollow_plate/(?P<plate_id>\d+)/$',views.unfollow_plate,name='unfollow_plate'),
+    #用户关注某个文章
+    url(r'^follow_post/(?P<post_id>\d+)/$',views.follow_post,name='follow_post'),
+    #取消关注某个文章
+    url(r'^unfollow_post/(?P<post_id>\d+)/$',views.unfollow_post,name='unfollow_post'),
+    #用户关注某个股票
+    url(r'^follow_stock/(?P<stock_name>\S+)/$',views.follow_stock,name='follow_stock'),
+    #取消关注某个股票
+    url(r'^unfollow_stock/(?P<stock_name>\S+)/$',views.unfollow_stock,name='unfollow_stock'),
 ]

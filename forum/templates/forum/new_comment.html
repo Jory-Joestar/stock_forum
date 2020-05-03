@@ -6,7 +6,7 @@
 
 {% block content %}
   
-  <h4><p>回到评论区-<a href="{% url 'forum:show_comments' post.id %}">{{ post }}</a></p></h4>
+  <h4><p>回到评论区-<a href="{% url 'forum:show_post' post.id %}">{{ post }}</a></p></h4>
 
   <p>添加你的评论:</p>
   <form action="{% url 'forum:new_comment' post.id %}" method="POST">

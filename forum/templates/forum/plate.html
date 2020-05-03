@@ -2,6 +2,18 @@
 
 {% block header %}
   <h2>{{ plate }}</h2>
+  {% if followed %}
+  <a href="{% url 'forum:unfollow_plate' plate.id %}" class="btn btn-success text-right" role="button">取消关注</a>
+  {% else %}
+  <a href="{% url 'forum:follow_plate' plate.id %}" class="btn btn-success text-right" role="button">关注</a>
+  {% endif %}
+  {% if messages %}
+        {% for msg in messages %}
+        <script>
+                alert('{{ msg.message }}');
+        </script>
+        {% endfor %}
+    {% endif %}
 {% endblock header%}
 
 {% block content %}
@@ -13,14 +25,14 @@
 
   {% for post in posts %}
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <ul class="list-inline text-right">
-          <li class="pull-left"><h4>{{ post.date_added|date:'M d, Y H:i' }}</h4></li>
-          <li><a href="{% url 'forum:show_comments' post.id %}" class="btn btn-primary text-right" role="button">评论</a></li>
-        </ul>
-      </div>
       <div class="panel-body">
-        {{ post.text|linebreaks }}
+        <h4><a href="{% url 'forum:show_post' post.id %}">{{ post }}</a></h4>
+      </div>
+      <div class="panel-footer">
+        <ul class="list-inline text-right">
+          <li class="pull-left"><small>--{{post.owner}},  {{ post.date_added|date:'M d, Y H:i' }}</small></li>
+          <br>
+        </ul>
       </div>
     </div><!-- panel -->
     {% empty %}

@@ -1,0 +1,20 @@
+{% extends "forum/base.html" %}
+
+{% block header %}
+  <h2>股票查询</h2>
+{% endblock header%}
+
+{% block content %}
+
+<div>
+    
+  <hr />
+    <form action="{% url 'forum:get_stock' %}" method="POST">
+        <span>请输入股票名称：</span>
+        <br>
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">查询相关股票</button>
+    </form>
+</div>
+{% endblock content%}

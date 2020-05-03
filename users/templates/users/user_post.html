@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<!-- 管理我发表的文章 目前功能还不全 -->
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			ul li {
+				height: 30px;
+			}
+
+			.divButton {
+				float: right;
+
+				padding-right: 5%;
+			}
+		</style>
+	</head>
+	<body>
+
+		{% if messages %}
+        {% for msg in messages %}
+        <script>
+                alert('{{ msg.message }}');
+        </script>
+        {% endfor %}
+    	{% endif %}
+
+		<div class="div1">
+			<h2>我的文章</h2>
+			<br />
+			<ul>
+				{% for post in posts %}
+				<li>
+					<a href="{% url 'forum:show_post' post.id %}" target="_top">{{ post }}</a>
+					<div class="divButton"><a href="{% url 'forum:del_post' post.id %}"><button type="submit">删除文章</button></a></div>
+				</li>
+				{% empty %}
+				<li>你还没有发表任何文章</li>
+				{% endfor %}
+			</ul>
+
+		</div>
+	</body>
+</html>

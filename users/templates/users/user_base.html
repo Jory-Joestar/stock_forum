@@ -11,6 +11,61 @@
 
         {% bootstrap_css %}
         {% bootstrap_javascript %}
+        <style type="text/css">
+			.menu {
+				
+				height: 50px;
+				/*设置元素水平居中*/
+				text-align: center;
+				/*去除内联元素间隙*/
+				font-size: 0;
+				/*去掉ul自带的.格式*/
+				list-style: none;
+				padding: 0;
+				
+				
+			}
+
+			.menu li {
+				/*将元素转换为行内块元素*/
+
+				display: inline-block;
+				width: 98px;
+				height: 48px;
+				border: 1px solid gold;
+				font-size: 16px;
+				/*将边框合并*/
+
+				margin-right: -1px;
+				text-align: center;
+				line-height: 48px;
+			}
+
+			.menu a {
+				font-family: "Microsoft YaHei UI";
+				color: blue;
+				/*去掉a元素的下划线*/
+
+				text-decoration: none;
+			}
+
+			/*鼠标位于元素位置时改变元素样式*/
+
+			.menu li:hover {
+				background-color: orange;
+			}
+
+			.menu a:hover {
+				color: #fff;
+			}
+			.bodyHtml{
+				margin-top: 5%;
+				margin-left: 15%;
+				border: 8px groove #1ABC9C;
+				width: 70%;
+				height: 400px;
+			}
+		</style>
     </head>
 
     <body>
