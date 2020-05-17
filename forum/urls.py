@@ -30,8 +30,12 @@ urlpatterns=[
     url(r'^get_stock_price/$',views.get_stock_price,name='get_stock_price'),
     #查询股票
     url(r'^get_stock/$',views.get_stock,name='get_stock'),
-    #查询结果
+    #查询股票结果
     url(r'^get_stock_result/(?P<stock_name>\S+)/$',views.get_stock_result,name='get_stock_result'),
+    #查询板块结果
+    url(r'^search_plate/(?P<plate_name>\S+)/$',views.search_plate,name='search_plate'),
+    #全网站查询文章结果
+    url(r'^search_post_all/(?P<post_name>\S+)/$',views.search_post_all,name='search_post_all'),
     #股票详情页面
     url(r'^stock_info/(?P<stock_name>\S+)/$',views.stock_info,name='stock_info'),
     #用户自定义K线图

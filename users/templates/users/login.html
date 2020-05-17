@@ -1,25 +1,38 @@
-{% extends "forum/base.html" %}
-{% load bootstrap3 %}
+{% load static %}
 
-{% block header%}
-  <h2>登陆你的账户</h2>
-{% endblock header %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>login</title>
+<!-- 这是页面式的，之后也可以根据需求改成弹窗式的-->
+<link href="{% static 'user_login.css' %}" rel="stylesheet" type="text/css" media="all"/>
 
-{% block content %}
-
-  {% if form.errors %}
+</head>
+<body>
+<div class="login">
+	<h2>个人中心登录</h2>
+	<div class="login-top">
+    <h1>账号密码登录</h1>
+    {% if form.errors %}
     <p>用户名和密码不符，请重试。</p>
-  {% endif %}
-
-  <form method="POST" action="{% url 'users:login' %}" class="form">
+    {% endif %}
+		<form method="POST" action="{% url 'users:login' %}" class="form">
       {% csrf_token %}
-      {% bootstrap_form form %}
-
-      {% buttons %}
-        <button name="submit" class="btn btn-primary">登陆</button>
-      {% endbuttons %}
-
+      {{ form }}
+      <div class="forgot">
+        <a href="#">忘记密码</a>
+      <!-- 忘记密码这个功能还没有实现，实现之后补 -->
+        <input type="submit" value="登陆" >
+      <!-- 下边接登陆后的页面 验证用户名密码啥的-->
+      </div>
       <input type="hidden" name="next" value="{% url 'forum:index' %}" />
-  </form>
+    </form>
+	</div>
+	<div class="login-bottom">
+		<h3>还没有账号？ &nbsp; 点我 &nbsp;<a href="{% url 'users:register' %}">注册</a></h3>
+	</div>
+</div>	
 
-{% endblock content %}
+
+</body>
+</html>

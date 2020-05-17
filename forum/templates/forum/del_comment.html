@@ -1,14 +1,28 @@
 {% extends "forum/base.html" %}
 
-{% block header %}
-  <h2>删除评论</h2>
-{% endblock header%}
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
 
-{% block content %}
-  
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <h2>删除评论</h2>
+
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
   <h2>
       {{info}}
   </h2>
   <p><a href="{% url 'forum:show_post' post.id %}" class="btn btn-success" role="button">回到评论</a></p>
 
-{% endblock content %}
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}

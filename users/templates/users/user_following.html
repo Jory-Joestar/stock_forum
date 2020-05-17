@@ -67,10 +67,13 @@
 					{% for stock in stock_list %}
 					<li>
 						<a href="{% url 'forum:stock_info' stock %}" target="_top">{{ stock }}</a>
+						{% if selecteduser == user %}
 						<div class="divButton"><a href="{% url 'forum:unfollow_stock' stock %}"><button type="submit">取消关注</button></a></div>
+						{% else %}
+						{% endif %}
 					</li>
 					{% empty %}
-					<li>你还没有关注任何股票</li>
+					<li>还没有关注任何股票</li>
 					{% endfor %}
 				</ul>
 			</div>
@@ -82,10 +85,13 @@
 					{% for post in following_post %}
 					<div>
 						<a href="{% url 'forum:show_post' post.id %}" target="_top">{{ post }}</a>
+						{% if selecteduser == user %}
 						<div class="divButton"><a href="{% url 'forum:unfollow_post' post.id %}"><button type="submit">取消关注</button></a></div>
+						{% else %}
+						{% endif %}
 					</div>
 					{% empty %}
-					<li>你还没有关注任何文章</li>
+					<li>还没有关注任何文章</li>
 					{% endfor %}
 				</ul>
 
@@ -97,10 +103,13 @@
 					{% for plate in following_plate %}
 					<li>
 						<a href="{% url 'forum:plate' plate.id %}" target="_top">{{ plate }}</a>
+						{% if selecteduser == user %}
 						<div class="divButton"><a href="{% url 'forum:unfollow_plate' plate.id %}"><button type="submit">取消关注</button></a></div>
+						{% else %}
+						{% endif %}
 					</li>
 					{% empty %}
-					<li>你还没有关注任何板块</li>
+					<li>还没有关注任何板块</li>
 					{% endfor %}
 				</ul>
 			</div>

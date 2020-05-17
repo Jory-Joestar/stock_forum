@@ -1,24 +1,209 @@
 {% extends "forum/base.html" %}
+{% load static %}
 
-{% block header %}
-  <h1>所有板块</h1>
-{% endblock header %}
+{% block settings %}
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(["_setAccount", "UA-22557155-5"]);
+    _gaq.push(["_trackPageview"]);
+    (function() {
+        var b = document.createElement("script");
+        b.type = "text/javascript";
+        b.async = true;
+        b.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
+        var a = document.getElementsByTagName("script")[0];
+        a.parentNode.insertBefore(b, a)
+    })();
+</script>
+{% endblock settings %}
 
-{% block content %}
+{% block search %}
+<!-- 搜索栏 -->
+<div class="hero-unit blow">
+  <h1>板块空间</h1>
+  <!-- 左边网站图片展示框 -->
+  <div class="home-img">
+    <img src="{% static 'img/template_logo.png' %}">
+  </div>
+  <!-- 右侧二维码展示？放图片也行 -->
+  <div class="qr-code">
+    关
+    <br />
+    注
+    <br />
+    我
+    <br />
+    们
+    
+    <img src="{% static 'img/qr-code1.jpg' %}" /> 
+    <img src="{% static 'img/qr-code1.jpg' %}" />
+    <img src="{% static 'img/qr-code1.jpg' %}" />
+    <img src="{% static 'img/qr-code1.jpg' %}" />
+  </div>
+  <!-- /右侧二维码展示？ -->
+  <!-- 主搜索栏 -->
+  <div class="main-search">        
+        <form action="{% url 'forum:index' %}" method="POST" name="search">
+          {% csrf_token %}
+          <input  id="search-box" type="search" placeholder="请输入..." name="search_item" />&nbsp
+          <!-- 加事件监听 -->
+          <button type="submit" name="search_plate"><i>进板块</i></button>
+          <button type="submit" name="search_post"><i>查文章</i></button>
+          <button type="submit" name="search_stock"><i>搜股票</i></button>
+        </form>
+        
+  </div>
+  <!-- /主搜索栏 -->
+  <div class="hot-search">
+    <img src="{% static 'img/icon-hot.png' %}" /> 
+    <span style="font-weight:bold;">热门搜索：</span>
+    <!-- 为了好看 可以给他固定下来（字数比较重要 会影响排版） -->
+    <a href="#">热门搜索1</a>&nbsp&nbsp
+    <a href="#">热门搜索2</a>&nbsp&nbsp
+    <a href="#">热门搜索3</a>&nbsp&nbsp
+    <a href="#">热门搜索4</a>
+  </div>
+  
+</div>
+<!-- /搜索栏 -->
+{% endblock search %}
 
-  <ul class="list-group">
-    {% for plate in plates %}
-      <li class="list-group-item">
-          <h3>
-            <a href="{% url 'forum:plate' plate.id %}">{{ plate }}</a>
-          </h3>
-      </li>
-    {% empty %}
-      <li>当前还没有任何板块</li>
-    {% endfor %}
-  </ul>
+{% block more %}
+<!-- 热门板块 -->
+<div class="hero-unit blow">
+    <h2><span class="icon-fire"></span> &nbsp;热门板块</h2>
+    <div class="nav-secondary inverse">
+        <nav>
+            <ul>
+                <!-- 图标之后再改 -->
+                {% for hot in hot_plates %}
+                <li><a class="wuxify-me" href="{% url 'forum:plate' hot.id %}"><span class="icon-tag"></span>{{ hot }}</a></li>
+                {% empty %}
+                <li><a class="wuxify-me" href="{% url 'forum:new_plate' %}"><span class="icon-plus"></span>新建板块</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+    {% if user.is_authenticated %}
 
-  <h3><a href="{% url 'forum:new_plate' %}" class="btn btn-primary btn-lg btn-block" role="button">创建新的板块</a></h3>
+    <h2><span class="icon-heart"></span>&nbsp;我的板块</h2>
+    <div class="nav-secondary inverse">
+        <nav>
+            <ul>
+                <!-- 图标之后再改 -->
+                {% for owned in owned_plates %}
+                <li><a class="wuxify-me" href="{% url 'forum:plate' owned.id %}"><span class="icon-tag"></span>{{ owned }}</a></li>
+                {% empty %}
+                {% endfor %}
+                <li><a class="wuxify-me" href="{% url 'forum:new_plate' %}"><span class="icon-plus"></span>新建板块</a></li>
+            </ul>
+        </nav>
+    </div>
 
+    <h2><span class="icon-heart"></span>&nbsp;我的关注</h2>
+    <div class="nav-secondary inverse">
+        <nav>
+            <ul>
+                <!-- 图标之后再改 -->
+                {% for following in following_plates %}
+                <li><a class="wuxify-me" href="{% url 'forum:plate' following.id %}"><span class="icon-tag"></span>{{ following }}</a></li>
+                {% empty %}
+                <li>你还没有关注任何板块</li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+<!-- /热门板块 -->
 
-{% endblock content %}
+<!-- 所有版块 -->
+<div class="content">
+    <!-- Page header -->
+    <div class="page-header">
+        <h1><span class="icon-th"></span> 所有版块</h1>
+    </div>
+    <!-- /Page header -->
+    <div class="page-container tab-content">
+        <!-- Grid row -->
+        <div class="row">
+            <!-- Example huge accordion -->
+            <!-- Page grid cell (12 blocks - full) -->
+            <article class="span12">
+                <div id="accordion2" class="accordion huge">
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" href="#collapseOne" data-parent="#accordion2" data-toggle="collapse"> 国内市场<span
+                                 class="badge badge-inverse">{{ domestic_num }}</span>
+                            </a>
+                        </div>
+                        <div id="collapseOne" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <table class="plate-table">
+                                    {% for line in domestic %}
+                                    <tr>
+                                        {% for dom_plate in line %}
+                                          <td><a href="{% url 'forum:plate' dom_plate.id %}">{{ dom_plate }}</a></td>
+                                        {% empty %}
+                                        {% endfor %}
+                                    </tr>
+                                    {% empty %}
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" href="#collapseTwo" data-parent="#accordion2" data-toggle="collapse"> 海外市场<span
+                                 class="badge badge-inverse">{{ foreign_num }}</span></a>
+                        </div>
+                        <div id="collapseTwo" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <table class="plate-table">
+                                    {% for line in foreign %}
+                                    <tr>
+                                        {% for frgn_plate in line %}
+                                          <td><a href="{% url 'forum:plate' frgn_plate.id %}">{{ frgn_plate }}</a></td>
+                                        {% empty %}
+                                        {% endfor %}
+                                    </tr>
+                                    {% empty %}
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" href="#collapseFive" data-parent="#accordion2" data-toggle="collapse"> 其它板块
+                                <span class="badge badge-inverse">{{ others_num }}</span></a>
+                        </div>
+                        <div id="collapseFive" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <table class="plate-table">
+                                    {% for line in others %}
+                                    <tr>
+                                        {% for oth_plate in line %}
+                                          <td><a href="{% url 'forum:plate' oth_plate.id %}">{{ oth_plate }}</a></td>
+                                        {% empty %}
+                                        {% endfor %}
+                                    </tr>
+                                    {% empty %}
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <!-- /Page grid cell (12 blocks - full) -->
+        </div>
+        <!-- /Grid row -->
+    </div>
+</div>
+<!-- /所有版块 -->
+{% endblock more %}

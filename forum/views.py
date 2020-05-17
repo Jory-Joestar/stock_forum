@@ -16,15 +16,51 @@ import datetime
 # Create your views here.
 def index(request):
     '''论坛的主页'''
+    if request.method == 'POST':
+        if 'search_plate' in request.POST:
+            plate_name=request.POST['search_item']
+            return HttpResponseRedirect(reverse('forum:search_plate',args=[plate_name]))
+        elif 'search_post' in request.POST:
+            post_name=request.POST['search_item']
+            return HttpResponseRedirect(reverse('forum:search_post_all',args=[post_name]))
+        elif 'search_stock' in request.POST:
+            stock_name=request.POST['search_item']
+            return HttpResponseRedirect(reverse('forum:get_stock_result',args=[stock_name]))
     informations=Information.objects.all().order_by('-date_added')
     context={'informations':informations}
     return render(request,'forum/index.html',context)
 
-@login_required
+#@login_required
 def plates(request):
     '''显示论坛所有板块'''
-    plates=Plate.objects.all().order_by('date_added')
-    context={'plates':plates}
+    #获取所有板块
+    plates=Plate.objects.all().exclude(text='__private__')
+    #获取前10名最热板块
+    hot_plates=plates.order_by('-hot')[:10]
+    #获取国内市场板块
+    domestic=plates.filter(market=0)
+    domestic_num=len(domestic)
+    domestic=[domestic[i:i + 4] for i in range(0, domestic_num, 4)]
+    #获取海外市场板块
+    foreign=plates.filter(market=1)
+    foreign_num=len(foreign)
+    foreign=[foreign[i:i + 4] for i in range(0, foreign_num, 4)]
+    #获取其他类型板块
+    others=plates.filter(market=2)
+    others_num=len(others)
+    others=[others[i:i + 4] for i in range(0, others_num, 4)]
+    if request.user.is_authenticated:
+        profile=UserProfile.objects.get(owner=request.user)
+        #获得当前用户关注的板块
+        following_plates=profile.following_plate.all()
+        #获取当前用户创建的板块
+        owned_plates=Plate.objects.filter(owner=request.user)
+    else:
+        following_plates=None
+        owned_plates=None
+    context={'hot_plates':hot_plates,'domestic':domestic,'foreign':foreign,
+            'others':others,'following_plates':following_plates,'owned_plates':owned_plates,
+            'domestic_num':domestic_num,'foreign_num':foreign_num,'others_num':others_num}
     return render(request,'forum/plates.html',context)
 
 @login_required
@@ -56,6 +92,7 @@ def new_plate(request):
         if form.is_valid():
             new_topic=form.save(commit=False)
             new_topic.owner=request.user
+            new_topic.market=request.POST['market']
             new_topic.save()
             return HttpResponseRedirect(reverse('forum:plates'))
     context={'form':form}
@@ -76,7 +113,10 @@ def new_post(request,plate_id):
             new_post.plate=plate
             new_post.owner=request.user
             new_post.save()
-            return HttpResponseRedirect(reverse('forum:plate',args=[plate_id]))
+            if plate.text=='__private__':
+                return HttpResponseRedirect(reverse('users:user_space',args=[request.user.id]))
+            else:
+                return HttpResponseRedirect(reverse('forum:plate',args=[plate_id]))
     context={'plate':plate,'form':form}
     return render(request,'forum/new_post.html',context)
 
@@ -145,7 +185,7 @@ def response_comment(request,comment_id):
 @login_required
 def show_dynamic(request):
     '''显示动态'''
-    posts=Post.objects.all().order_by('-date_added')
+    posts=Post.objects.all().exclude(plate__text='__private__').order_by('-date_added')
     context={'posts':posts}
     return render(request,'forum/show_dynamic.html',context)
 
@@ -230,6 +270,18 @@ def get_stock_result(request,stock_name):
     results=refer.get_related(stock_name)
     context={'results':results}
     return render(request,'forum/get_stock_result.html',context)
+
+def search_plate(request,plate_name):
+    '''查询板块'''
+    results=Plate.objects.exclude(text='__private__').filter(text__icontains=plate_name)
+    context={'results':results}
+    return render(request,'forum/search_plate.html',context)
+
+def search_post_all(request,post_name):
+    '''查询网站内所有的文章，不包括用户日志'''
+    results=Post.objects.exclude(plate__text='__private__').filter(text__icontains=post_name)
+    context={'results':results}
+    return render(request,'forum/search_post_all.html',context)
 
 @login_required
 def stock_info(request,stock_name):

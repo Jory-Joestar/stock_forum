@@ -1,12 +1,21 @@
 {% extends "forum/base.html" %}
 
-{% block header %}
-  <h2>查询股票价格</h2>
-{% endblock header%}
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
 
-{% block content %}
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <h2>查询股票价格</h2>
 
-  <p>按股票名称查价：</p>
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <p>按股票名称查价：</p>
   <form action="{% url 'forum:get_stock_price' %}" method="POST">
       {% csrf_token %}
       {{form.as_p}}
@@ -19,7 +28,10 @@
       {{ result|linebreaks }}
     </div>
   </div>
-{% endblock content%}
-
-
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}
 

@@ -1,18 +1,34 @@
 {% extends "forum/base.html" %}
 
-{% block header %}
-  <p>查询结果</p>
-{% endblock header%}
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
 
-{% block content %}
-  <div>
-    <!-- 展示查询结果，做成a链接形式 -->
-    <ul>
-        {% for stock in results %}
-        <li><a href="{% url 'forum:stock_info' stock %}">{{ stock }}</a></li>
-        {% empty %}
-        <li>没有找到相关的股票</li>
-        {% endfor %}
-    </ul>
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <p>查询结果</p>
+
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <div>
+      <!-- 展示查询结果，做成a链接形式 -->
+      <ul>
+          {% for stock in results %}
+          <li><a href="{% url 'forum:stock_info' stock %}">{{ stock }}</a></li>
+          {% empty %}
+          <li>没有找到相关的股票</li>
+          {% endfor %}
+      </ul>
+    </div>
+              
+  </div>
+  <!-- /Page container -->
 </div>
-{% endblock content%}
+<!-- /主页描述 -->
+{% endblock describe %}
+

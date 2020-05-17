@@ -33,7 +33,10 @@
 				{% for post in posts %}
 				<li>
 					<a href="{% url 'forum:show_post' post.id %}" target="_top">{{ post }}</a>
+					{% if selecteduser == user %}
 					<div class="divButton"><a href="{% url 'forum:del_post' post.id %}"><button type="submit">删除文章</button></a></div>
+					{% else %}
+					{% endif %}
 				</li>
 				{% empty %}
 				<li>你还没有发表任何文章</li>

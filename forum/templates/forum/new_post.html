@@ -1,20 +1,40 @@
 {% extends "forum/base.html" %}
 
-{% block header %}
-  <h2>添加文章</h2>
-{% endblock header%}
 
-{% block content %}
-  
-  <h4>
-    <p>回到板块-<a href="{% url 'forum:plate' plate.id %}">{{ plate }}</a></p>
-  </h4>
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
 
-  <p>在这里编写你的文章：</p>
-  <form action="{% url 'forum:new_post' plate.id %}" method="POST">
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <h2>添加文章</h2>
+
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    {% if plate.text == "__private__" %}
+    <h4>
+      <p>回到-<a href="{% url 'users:user_space' user.id %}">个人空间</a></p>
+    </h4>
+    {% else %}
+    <h4>
+      <p>回到板块-<a href="{% url 'forum:plate' plate.id %}">{{ plate }}</a></p>
+    </h4>
+    {% endif %}
+
+    <p>在这里编写你的文章：</p>
+    <form action="{% url 'forum:new_post' plate.id %}" method="POST">
       {% csrf_token %}
       {{form.as_p}}
       <button name="submit">添加</button>
-  </form>
-
-{% endblock content%}
+    </form>
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}

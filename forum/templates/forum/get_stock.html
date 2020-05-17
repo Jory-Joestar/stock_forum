@@ -1,20 +1,33 @@
 {% extends "forum/base.html" %}
 
-{% block header %}
-  <h2>股票查询</h2>
-{% endblock header%}
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
 
-{% block content %}
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <h2>股票查询</h2>
 
-<div>
-    
-  <hr />
-    <form action="{% url 'forum:get_stock' %}" method="POST">
-        <span>请输入股票名称：</span>
-        <br>
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">查询相关股票</button>
-    </form>
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <div>
+        <form action="{% url 'forum:get_stock' %}" method="POST">
+            <span>请输入股票名称：</span>
+            <br>
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">查询相关股票</button>
+        </form>
+    </div>
+              
+  </div>
+  <!-- /Page container -->
 </div>
-{% endblock content%}
+<!-- /主页描述 -->
+{% endblock describe %}
+

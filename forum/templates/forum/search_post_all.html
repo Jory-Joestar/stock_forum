@@ -1,0 +1,34 @@
+{% extends "forum/base.html" %}
+
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
+
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <p>查询结果</p>
+
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <div>
+      <!-- 展示查询结果，做成a链接形式 -->
+      <ul>
+          {% for post in results %}
+          <li><a href="{% url 'forum:show_post' post.id %}">{{ post }}</a></li>
+          {% empty %}
+          <li>没有找到相关的文章</li>
+          {% endfor %}
+      </ul>
+    </div>
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}
+

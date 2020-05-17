@@ -1,65 +1,349 @@
-{% load bootstrap3 %}
+{% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>股票信息论坛</title>
+		<!-- CSS styles -->
+		<link type="text/css" rel="stylesheet" href="{% static 'css/homepage-red.css' %}" />
 
-        <title>股票信息论坛</title>
+		<!-- Fav and touch icons -->
+		<link rel="shortcut icon" href="{% static 'img/icons/favicon.ico' %}" />
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'img/icons/apple-touch-icon-114-precomposed.png' %}" />
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'img/icons/apple-touch-icon-72-precomposed.png' %}" />
+		<link rel="apple-touch-icon-precomposed" href="{% static 'img/icons/apple-touch-icon-57-precomposed.png' %}" />
 
-        {% bootstrap_css %}
-        {% bootstrap_javascript %}
-    </head>
+		<!-- JS Libs -->
+		<script>window.jQuery || document.write('<script src="{% static "js/libs/jquery.js" %}"><\/script>')</script>
+		<script src="{% static 'js/libs/modernizr.js' %}"></script>
+		<script src="{% static 'js/libs/selectivizr.js' %}"></script>
 
-    <body>
+		<script>
+			$(document).ready(function(){
+				
+				// Navbar tooltips
+				$('.navbar [title]').tooltip({
+					placement: 'bottom'
+				});
+				
+				// Content tooltips
+				$('[role=main] [title]').tooltip({
+					placement: 'top'
+				});
+				
+				// Dropdowns
+				$('.dropdown-toggle').dropdown();
 
-        <!-- Static navbar -->
-        <nav class="navbar navbar-inverse navbar-static-top">
-            <div class="container">
+				// Tabs
+				$('.demoTabs a').click(function(e) {
+					e.preventDefault();
+					$(this).tab('show');
+				})
 
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed"
-                    data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                    </button>
-                    <a class="navbar-brand" href="{% url 'forum:index' %}">
-                        首页
-                    </a>
-                </div>
+				// Radio buttons
+				$('.demoBtns').button();
 
-                <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="{% url 'forum:plates' %}">板块</a></li>
-                        <li><a href="{% url 'forum:show_dynamic' %}">动态</a></li>
-                        <li><a href="{% url 'forum:get_stock_price' %}">查询价格</a></li>
-                        <li><a href="{% url 'forum:get_stock' %}">查询股票</a></li>
-                    </ul>
+				// Popovers
+				$('.demoPopover').popover();
+				
+			});
+		</script>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		{% block settings %}
+		{% endblock settings %}
+	</head>
+	<body>
+		<!-- 之后的页面可能要用同样的导航栏 搬过去 -->
+		<!-- 顶部导航栏  -->
+		<header class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".user">
+						<span class="icon-user"></span>
+					</button>
+					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".navigation">
+						<span class="icon-chevron-down"></span>
+					</button>
 
-                    <ul class="nav navbar-nav navbar-right">
-                        {% if user.is_authenticated %}
-                          <li><a>Hello, {{ user.username }}.</a></li>
-                          <li><a href="{% url 'users:logout' %}">登出</a></li>
-                          <li><a href="{% url 'users:user_space' %}">个人空间</a></li>
-                        {% else %}
-                          <li><a href="{% url 'users:register' %}">注册</a></li>
-                          <li><a href="{% url 'users:login' %}">登陆</a></li>
-                        {% endif %}
-                    </ul>
-                </div><!--/.nav-collapse -->
-            </div>
-        </nav>
-        <div class="container">
+					<nav class="nav-collapse navigation">
+						<ul class="nav" role="navigation">
+							<!-- 导航栏内容 之后可能会修改 -->
+							<!-- span里边是图标icon 之后再改 -->
+							<!-- title里边写引导 -->
+							<li class="active"><a href="{% url 'forum:index' %}" title="网站首页"><span class="icon-home"></span> 首页</a></li>
+							<li><a href="{% url 'forum:plates' %}" title="查看所有板块"><span class="icon-tasks"></span> 板块</a></li>
+							<li><a href="{% url 'forum:show_dynamic' %}" title="查看最新文章动态"><span class="icon-table"></span> 文章动态</a></li>
+							<li><a href="{% url 'forum:get_stock' %}" title="详细查看股票信息"><span class="icon-font"></span> 股票</a></li>
+							<li><a href="#" title="在模拟股票平台大展手脚"><span class="icon-magic"></span> 模拟交易</a></li>
+							<li class="divider-vertical"></li>
+						</ul>
+					</nav>
+					<nav class="nav-collapse user">
+						<div class="user-info pull-right">
 
-            <div class="page-header">
-                {% block header %}{% endblock header %}
-            </div>
-            <div>
-                {% block content %}{% endblock content %}
-            </div>
-        </div><!-- /container -->
+							{% if user.is_authenticated %}
+							<!-- 之后后可以考虑用户头像 -->
+								{% if user.userprofile.picture %}
+								<img src="{{ MEDIA_URL }}{{ user.userprofile.picture }}" alt="{% static 'images/default_user.jpg' %}" width="33" height="33"/>
+								{% else %}
+								<img src="{% static 'images/default_user.jpg' %}" alt="{% static 'images/default_user.jpg' %}" width="33" height="33"/>
+								{% endif %}
+							<div class="btn-group">
+								<!-- 这里链接到用户中心 -->
+								<a class="btn dropdown-toggle" data-toggle="dropdown">
+									<div><strong>{{ user.username }}</strong>已登录</div>
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<!-- 用户头像下简单的下拉菜单 -->
+									<li><a href="{% url 'users:user_space' user.id %}"><span class="icon-user"></span> 个人中心</a></li>
+									<li><a href="{% url 'users:private_post' %}"><span class="icon-edit"></span> 写日志</a></li>
+									<li><a href=""><span class="icon-bell"></span> 关注列表</a></li>
+									<li><a href=""><span class="icon-envelope"></span> 消息提醒</a></li>
+									<li class="divider"></li>
+									<li><a href="{% url 'users:logout' %}"><span class="icon-signout"></span> 登出</a></li>
+								</ul>
+                            </div>
+                            {% else %}
+                            <ul class="nav" role="navigation">
+                                <li><a href="{% url 'users:register' %}">注册</a></li>
+                                <li><a href="{% url 'users:login' %}">登陆</a></li>
+                            </ul>
+                            {% endif %}
+						</div>
+					</nav>
+				</div>
+			</div>
+		</header>
+		<!-- /顶部导航栏结束 -->
 
-    </body>
+		<!-- 正文 -->
+		<div class="container" role="main">
 
+			{% block search %}
+			{% endblock search %}
+
+			{% block describe %}
+			{% endblock describe %}
+
+			{% block more %}{% endblock more %}
+
+		</div>
+		<!-- /正文 -->
+
+
+		<!-- 在最底部 版权申明和一些我们的链接 -->
+		<footer class="container">
+			<nav>
+				<ul>
+					<li>&copy; Copyright 2020. All rights reserved.</li>
+					<li><a href="#">Documentation</a></li>
+					<li><a href="#">Support</a></li>
+					<li><a href="#">API</a></li>
+					<li><a href="#">Blog</a></li>
+				</ul>
+			</nav>
+
+		</footer>
+		<!-- Scripts -->
+		<script src="{% static 'js/navbar.js' %}"></script>
+		<script src="{% static 'js/plugins/waypoints.min.js' %}"></script>
+		<script src="{% static 'js/bootstrap/bootstrap-tooltip.js' %}"></script>
+		<script src="{% static 'js/bootstrap/bootstrap-dropdown.js' %}"></script>
+		<script src="{% static 'js/bootstrap/bootstrap-tab.js' %}"></script>
+		<script src="{% static 'js/bootstrap/bootstrap-button.js' %}"></script>
+		<script src="{% static 'js/bootstrap/bootstrap-alert.js' %}"></script>
+		<script src="{% static 'js/bootstrap/bootstrap-popover.js' %}"></script>
+		<script src="{% static 'js/bootstrap/bootstrap-collapse.js' %}"></script>
+		<script src="{% static 'js/bootstrap/bootstrap-modal.js' %}"></script>
+		<script src="{% static 'js/bootstrap/bootstrap-transition.js' %}"></script>
+
+		<!-- jQuery Flot Charts -->
+		<script src="{% static 'js/plugins/flot/jquery.flot.js' %}"></script>
+		<script src="{% static 'js/plugins/flot/jquery.flot.pie.js' %}"></script>
+
+		<script>
+			$(document).ready(function() {
+
+				// 主页曲线图
+				// 在展例中，我使用内联数据源，通常从服务器获取数据
+				var data = [],
+					totalPoints = 300;
+
+				function getRandomData() {
+					if (data.length > 0)
+						data = data.slice(1);
+
+					// do a random walk
+					while (data.length < totalPoints) {
+						var prev = data.length > 0 ? data[data.length - 1] : 50;
+						var y = prev + Math.random() * 10 - 5;
+						if (y < 0)
+							y = 0;
+						if (y > 100)
+							y = 100;
+						data.push(y);
+					}
+
+					// zip the generated y values with the x values
+					var res = [];
+					for (var i = 0; i < data.length; ++i)
+						res.push([i, data[i]])
+					return res;
+				}
+
+				// setup control widget
+				var updateInterval = 30;
+				$("#updateInterval").val(updateInterval).change(function() {
+					var v = $(this).val();
+					if (v && !isNaN(+v)) {
+						updateInterval = +v;
+						if (updateInterval < 1)
+							updateInterval = 1;
+						if (updateInterval > 2000)
+							updateInterval = 2000;
+						$(this).val("" + updateInterval);
+					}
+				});
+
+				// setup plot
+				var options = {
+					series: {
+						shadowSize: 0,
+						color: "#FF371B"
+					}, // drawing is faster without shadows
+					yaxis: {
+						min: 0,
+						max: 100
+					},
+					xaxis: {
+						show: false
+					},
+					grid: {
+						backgroundColor: '#ffffff'
+					}
+				};
+				var plot = $.plot($("#flot"), [getRandomData()], options);
+
+				function update() {
+					plot.setData([getRandomData()]);
+					// since the axes don't change, we don't need to call plot.setupGrid()
+					plot.draw();
+					setTimeout(update, updateInterval);
+				}
+
+				update();
+
+			});
+		</script>
+
+		<!-- jQuery DataTable -->
+		<!-- 股票table搜索框 -->
+		<script src="{% static 'js/plugins/dataTables/jquery.datatables.min.js' %}"></script>
+
+		<!-- 控制翻页 -->
+		<script>
+			/* Default class modification */
+			$.extend($.fn.dataTableExt.oStdClasses, {
+				"sWrapper": "dataTables_wrapper form-inline"
+			});
+
+			/* API method to get paging information */
+			$.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
+				return {
+					"iStart": oSettings._iDisplayStart,
+					"iEnd": oSettings.fnDisplayEnd(),
+					"iLength": oSettings._iDisplayLength,
+					"iTotal": oSettings.fnRecordsTotal(),
+					"iFilteredTotal": oSettings.fnRecordsDisplay(),
+					"iPage": Math.ceil(oSettings._iDisplayStart / oSettings._iDisplayLength),
+					"iTotalPages": Math.ceil(oSettings.fnRecordsDisplay() / oSettings._iDisplayLength)
+				};
+			}
+
+			/* Bootstrap style pagination control */
+			$.extend($.fn.dataTableExt.oPagination, {
+				"bootstrap": {
+					"fnInit": function(oSettings, nPaging, fnDraw) {
+						var oLang = oSettings.oLanguage.oPaginate;
+						var fnClickHandler = function(e) {
+							e.preventDefault();
+							if (oSettings.oApi._fnPageChange(oSettings, e.data.action)) {
+								fnDraw(oSettings);
+							}
+						};
+
+						$(nPaging).addClass('pagination').append(
+							'<ul>' +
+							'<li class="prev disabled"><a href="#"><span class="icon-caret-left"></span> ' + oLang.sPrevious +
+							'</a></li>' +
+							'<li class="next disabled"><a href="#">' + oLang.sNext + ' <span class="icon-caret-right"></span></a></li>' +
+							'</ul>'
+						);
+						var els = $('a', nPaging);
+						$(els[0]).bind('click.DT', {
+							action: "previous"
+						}, fnClickHandler);
+						$(els[1]).bind('click.DT', {
+							action: "next"
+						}, fnClickHandler);
+					},
+
+					"fnUpdate": function(oSettings, fnDraw) {
+						var iListLength = 0;
+						var oPaging = oSettings.oInstance.fnPagingInfo();
+						var an = oSettings.aanFeatures.p;
+						var i, j, sClass, iStart, iEnd, iHalf = Math.floor(iListLength / 2);
+
+						if (oPaging.iTotalPages < iListLength) {
+							iStart = 1;
+							iEnd = oPaging.iTotalPages;
+						} else if (oPaging.iPage <= iHalf) {
+							iStart = 1;
+							iEnd = iListLength;
+						} else if (oPaging.iPage >= (oPaging.iTotalPages - iHalf)) {
+							iStart = oPaging.iTotalPages - iListLength + 1;
+							iEnd = oPaging.iTotalPages;
+						} else {
+							iStart = oPaging.iPage - iHalf + 1;
+							iEnd = iStart + iListLength - 1;
+						}
+
+						for (i = 0, iLen = an.length; i < iLen; i++) {
+
+							// Add / remove disabled classes from the static elements
+							if (oPaging.iPage === 0) {
+								$('li:first', an[i]).addClass('disabled');
+							} else {
+								$('li:first', an[i]).removeClass('disabled');
+							}
+
+							if (oPaging.iPage === oPaging.iTotalPages - 1 || oPaging.iTotalPages === 0) {
+								$('li:last', an[i]).addClass('disabled');
+							} else {
+								$('li:last', an[i]).removeClass('disabled');
+							}
+						}
+					}
+				}
+			});
+
+			/* 股票Table左 */
+			$(document).ready(function() {
+				$('.datatable').dataTable({
+					"sDom": "<'row'<'span4'l><'span4'f>r>t<'row'<'span4'i><'span4'p>>",
+					"sPaginationType": "bootstrap",
+					"oLanguage": {
+						"sLengthMenu": "_MENU_ 支每页"
+					}
+				});
+			});
+		</script>
+
+		<div style="display:none">
+		</div>
+	</body>
 </html>
+
+

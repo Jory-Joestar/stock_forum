@@ -1,40 +1,596 @@
 {% extends "forum/base.html" %}
 {% load static %}
 
-{% block header %}
-  <div class="container">
-    <div class="row clearfix">
-      <div class="col-md-12 column">
-        <div class="jumbotron">
-          <h1>Hello！</h1>
-          <h2>
-            Welcome to our stock forum.
-        </h2>
+{% block search %}
+<!-- 搜索栏 -->
+<div class="hero-unit blow">
+  <h1>HELLO !</h1>
+  <!-- 左边网站图片展示框 -->
+  <div class="home-img">
+    <img src="{% static 'img/template_logo.png' %}">
+  </div>
+  <!-- 右侧二维码展示？放图片也行 -->
+  <div class="qr-code">
+    关
+    <br />
+    注
+    <br />
+    我
+    <br />
+    们
+    
+    <img src="{% static 'img/qr-code1.jpg' %}" /> 
+    <img src="{% static 'img/qr-code1.jpg' %}" />
+    <img src="{% static 'img/qr-code1.jpg' %}" />
+    <img src="{% static 'img/qr-code1.jpg' %}" />
+  </div>
+  <!-- /右侧二维码展示？ -->
+  <!-- 主搜索栏 -->
+  <div class="main-search">        
+        <form action="{% url 'forum:index' %}" method="POST" name="search">
+          {% csrf_token %}
+          <input  id="search-box" type="search" placeholder="请输入..." name="search_item" />&nbsp
+          <!-- 加事件监听 -->
+          <button type="submit" name="search_plate"><i>进板块</i></button>
+          <button type="submit" name="search_post"><i>查文章</i></button>
+          <button type="submit" name="search_stock"><i>搜股票</i></button>
+        </form>
+        
+  </div>
+  <!-- /主搜索栏 -->
+  <div class="hot-search">
+    <img src="{% static 'img/icon-hot.png' %}" /> 
+    <span style="font-weight:bold;">热门搜索：</span>
+    <!-- 为了好看 可以给他固定下来（字数比较重要 会影响排版） -->
+    <a href="#">热门搜索1</a>&nbsp&nbsp
+    <a href="#">热门搜索2</a>&nbsp&nbsp
+    <a href="#">热门搜索3</a>&nbsp&nbsp
+    <a href="#">热门搜索4</a>
+  </div>
+  
+</div>
+<!-- /搜索栏 -->
+{% endblock search %}
+
+
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
+
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <h1>xx论坛,股票投资者的不二选择!</h1>
+	<ul class="page-header-actions">
+	  <li><a href="" class="btn btn-wuxia btn-inverse pull-right" title="Official Bootstrap website" target="_blank"><span
+			class="icon-bookmark"></span> 按钮内容还没想好</a></li>
+  </ul>
+
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <!-- Grid row -->
+	<div class="row">
+
+		<!-- Page grid cell (4 blocks) -->
+		<article class="span4">
+			<p class="lead">网站描述的内容?还是其他内容,之后再决定</p>
+			<p>网站描述的内容?还是其他内容,之后再决定</p>
+			<p>网站描述的内容?还是其他内容,之后再决定</p>
+		</article>
+		<!-- /Page grid cell (4 blocks) -->
+
+		<!-- Page grid cell (8 blocks) -->
+		<article class="span8">
+			<div id="flot" class="flot dashboard"></div>
+		</article>
+		<!-- /Page grid cell (8 blocks) -->
+	</div>
+    <!-- /Grid row -->
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}
+
+
+      {% block more %}
+      <!-- 热门板块 -->
+      <div class="hero-unit blow">
+        <h1>热门板块</h1>
+        <p>放一点描述?图标之后再改</p>
+        <div class="nav-secondary inverse">
+          <nav>
+            <ul>
+              <!-- 图标之后再改 -->
+              <li><a class="wuxify-me" href=""><span class="icon-signal"></span>南京银行</a></li>
+              <li><a class="wuxify-me" href=""><span class="icon-picture"></span>中国平安</a></li>
+              <li><a class="wuxify-me" href=""><span class="icon-file"></span>阿里巴巴</a></li>
+              <li><a class="wuxify-me" href=""><span class="icon-calendar"></span>中国国旅</a></li>
+              <li><a class="wuxify-me" href=""><span class="icon-th"></span>快递板块</a></li>
+              <li><a class="wuxify-me" href=""><span class="icon-heart"></span>我的关注</a><span
+                  class="badge badge-inverse">6</span></li>
+            </ul>
+          </nav>
         </div>
       </div>
-    </div>
-  </div>
-
-{% endblock header %}
-
-{% block content%}
-  <h3>
-      <a href="{% url 'users:register' %}">创建一个账号。</a> 加入社区
-  </h3>
-  <h3>
-    分享投资经验，掌握资本市场动态
-  </h3>
-  {% for info in informations %}
-    <div class="panel panel-info">
-      <div class="panel-heading">
-        <h3>
-          通知 <small>--管理员: {{info.owner}}, 发布时间: {{ info.date_added|date:'M d, Y H:i' }}</small>
-        </h3>
+      <!-- /热门板块 -->
+      
+      <!-- 精选文章 -->
+      <div class="content">
+        <!-- Page header -->
+        <div class="page-header">
+          <h1><span class="icon-star"></span> 精选文章</h1>
+          <span class="loading" title="Loading&hellip;">Loading&hellip;</span>
+        </div>
+        <!-- /Page header -->
+      
+        <!-- Page container -->
+        <div class="page-container">
+      
+          <!-- Grid row -->
+          <div class="row">
+      
+            <!-- Page grid cell (12 blocks - full) -->
+            <article class="span12">
+              <div class="">
+                <nav>
+                  <!-- 文章的链接形式还没有做 -->
+                  <!-- 文章中如果有图片 就做个轮播 -->
+                  <ul>
+                    <li><a class="" href="">文章1</a></li>
+                    <li><a class="" href="">文章2</a></li>
+                    <li><a class="" href="">文章3</a></li>
+                    <li><a class="" href="">文章4</a></li>
+                  </ul>
+                </nav>
+              </div>
+            </article>
+            <!-- /Page grid cell (12 blocks - full) -->
+      
+          </div>
+          <!-- /Grid row -->
+      
+        </div>
+        <!-- /Page container -->
+      
       </div>
-      <div class="panel-body">
-        {{ info.text|linebreaks }}
+      <!-- /精选文章 -->
+      
+      <!-- 股票区 -->
+      <div class="content">
+        <!-- 标题 -->
+        <div class="page-header">
+          <h1>股票天地</h1>
+        </div>
+        <div class="page-container tab-content">
+          <!-- Tab #ui -->
+          <div class="tab-pane active" id="ui">
+      
+            <!-- 四个推荐股票 -->
+            <div class="row">
+              <h2 align="center">今日优质股票推荐</h2>
+              <br>
+              <div class="span3 center">
+                <a href="">
+                  <h3>推荐股票1</h3>
+                </a>
+                <p>股票1推荐理由</p>
+              </div>
+      
+              <div class="span3 center">
+                <a href="">
+                  <h3>推荐股票2</h3>
+                </a>
+                <p>股票2推荐理由</p>
+              </div>
+      
+              <div class="span3 center">
+                <a href="">
+                  <h3>推荐股票3</h3>
+                </a>
+                <p>股票3推荐理由</p>
+              </div>
+      
+              <div class="span3 center">
+                <a href="">
+                  <h3>推荐股票4</h3>
+                </a>
+                <p>股票4推荐理由</p>
+              </div>
+            </div>
+            <!-- /四个推荐股票 -->
+      
+            <!-- 股票的主要部分-->
+            <div class="row">
+      
+              <article class="span12">
+                <h2>热门股票一览</h2>
+              </article>
+      
+              <!-- 热门股票表格 -->
+              <article class="span8">
+                <table class="datatable table table-striped table-bordered" id="example">
+                  <thead>
+                    <!-- 具体表头再确定 -->
+                    <tr>
+                      <th>股票名称</th>
+                      <th>最新价</th>
+                      <th>涨跌幅</th>
+                      <th>热度指数</th>
+                      <th>推荐度</th>
+                    </tr>
+                  </thead>
+                  <!-- 这里是日后的股票数据 -->
+                  <tbody>
+                    <tr class="odd gradeX">
+                      <td>南京银行</td>
+                      <td>24.56</td>
+                      <td>+7.6%</td>
+                      <td>132.2</td>
+                      <td>AAA</td>
+                    </tr>
+                    <tr class="even gradeC">
+                      <td>中国平安</td>
+                      <td>86.54</td>
+                      <td>-0.15%</td>
+                      <td>652.2</td>
+                      <td>AA</td>
+                    </tr>
+                    <tr class="odd gradeA">
+                      <td>测试股票</td>
+                      <td>17.5</td>
+                      <td>+1.31%</td>
+                      <td>5.5</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="even gradeA">
+                      <td>测试股票</td>
+                      <td>17.6</td>
+                      <td>-0.25%</td>
+                      <td>6</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="odd gradeA">
+                      <td>测试股票</td>
+                      <td>27</td>
+                      <td>-0.95%</td>
+                      <td>7</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="even gradeA">
+                      <td>测试股票</td>
+                      <td>65.25</td>
+                      <td>-0.25%</td>
+                      <td>6</td>
+                      <td>A</td>
+                    </tr>
+      
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>91.0</td>
+                      <td>-0.25%</td>
+                      <td>1.8</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>91.5</td>
+                      <td>-0.56%</td>
+                      <td>1.8</td>
+                      <td>A</td>
+                    </tr>
+      
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>36.29</td>
+                      <td>-0.25%</td>
+                      <td>1.8</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>51.06</td>
+                      <td>+1.31%</td>
+                      <td>1</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>51.12</td>
+                      <td>+1.31%</td>
+                      <td>136</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>51.2</td>
+                      <td>+1.31%</td>
+                      <td>12</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>51.3</td>
+                      <td>+1.31%</td>
+                      <td>133</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>51.4</td>
+                      <td>+1.31%</td>
+                      <td>184</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>51.5</td>
+                      <td>+1.31%</td>
+                      <td>165</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>51.6</td>
+                      <td>+1.31%</td>
+                      <td>186</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>51.7</td>
+                      <td>-0.25%</td>
+                      <td>167</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>51.8</td>
+                      <td>-0.25%</td>
+                      <td>148</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票3</td>
+                      <td>21.1</td>
+                      <td>-0.25%</td>
+                      <td>163</td>
+                      <td>A</td>
+                    </tr>
+      
+                    <tr class="gradeA">
+                      <td>测试股票7</td>
+                      <td>21.2</td>
+                      <td>-0.56%</td>
+                      <td>125.5</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票7</td>
+                      <td>21.3</td>
+                      <td>-0.56%</td>
+                      <td>312.8</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票7</td>
+                      <td>22.0</td>
+                      <td>-0.26%</td>
+                      <td>419.3</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票7</td>
+                      <td>23.0</td>
+                      <td>-0.26%</td>
+                      <td>522.1</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票7</td>
+                      <td>1.35</td>
+                      <td>-0.26%</td>
+                      <td>420</td>
+                      <td>A</td>
+                    </tr>
+      
+                    <tr class="gradeA">
+                      <td>测试股票7</td>
+                      <td>60.25</td>
+                      <td>-0.95%</td>
+                      <td>413</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票6</td>
+                      <td>47.0</td>
+                      <td>+1.31%</td>
+                      <td>326</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票6</td>
+                      <td>47.5</td>
+                      <td>+1.31%</td>
+                      <td>235</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票6</td>
+                      <td>48.0</td>
+                      <td>+1.31%</td>
+                      <td>326</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票6</td>
+                      <td>48.5</td>
+                      <td>+1.31%</td>
+                      <td>326</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票6</td>
+                      <td>49.0</td>
+                      <td>+1.31%</td>
+                      <td>126</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票6</td>
+                      <td>49.2</td>
+                      <td>+6.32%</td>
+                      <td>126</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票6</td>
+                      <td>49.5</td>
+                      <td>+6.32%</td>
+                      <td>326</td>
+                      <td>A</td>
+                    </tr>
+      
+      
+                    <tr class="gradeA">
+                      <td>测试股票6</td>
+                      <td>324.25</td>
+                      <td>+4.63%</td>
+                      <td>856</td>
+                      <td>AA</td>
+                    </tr>
+                    <tr class="gradeC">
+                      <td>测试股票4</td>
+                      <td>83.12</td>
+                      <td>-0.29%</td>
+                      <td>3.1</td>
+                      <td>C</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票4</td>
+                      <td>83.33</td>
+                      <td>-0.15%</td>
+                      <td>3.3</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票4</td>
+                      <td>83.5</td>
+                      <td>+5.25%</td>
+                      <td>3.5</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeX">
+                      <td>测试股票2</td>
+                      <td>24.52</td>
+                      <td>-0.35%</td>
+                      <td>326</td>
+                      <td>B</td>
+                    </tr>
+                    <tr class="gradeC">
+                      <td>测试股票2</td>
+                      <td>25.1</td>
+                      <td>+3.25%</td>
+                      <td>1</td>
+                      <td>C</td>
+                    </tr>
+                    <tr class="gradeC">
+                      <td>测试股票2</td>
+                      <td>25.2</td>
+                      <td>+4.25%</td>
+                      <td>1</td>
+                      <td>C</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票5</td>
+                      <td>63.1</td>
+                      <td>-5.12%</td>
+                      <td>326</td>
+                      <td>C</td>
+                    </tr>
+                    <tr class="gradeA">
+                      <td>测试股票5</td>
+                      <td>63.4</td>
+                      <td>-5.12%</td>
+                      <td>326</td>
+                      <td>A</td>
+                    </tr>
+                    <tr class="gradeX">
+                      <td>测试股票5</td>
+                      <td>36.21</td>
+                      <td>-5.12%</td>
+                      <td>326</td>
+                      <td>B</td>
+                    </tr>
+                    <tr class="gradeX">
+                      <td>测试股票5</td>
+                      <td>32.58</td>
+                      <td>+0.56%</td>
+                      <td>326</td>
+                      <td>B</td>
+                    </tr>
+                    <tr class="gradeX">
+                      <td>测试股票5</td>
+                      <td>23.58</td>
+                      <td>+0.56%</td>
+                      <td>326</td>
+                      <td>B</td>
+                    </tr>
+                    <tr class="gradeU">
+                      <td>茅台</td>
+                      <td>1125.3</td>
+                      <td>+1.2%</td>
+                      <td>3625</td>
+                      <td>AAA</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </article>
+              <!-- /热门股票表格 -->
+      
+              <!-- 右侧内容 -->
+              <article class="span4">
+                <h3>这里放啥我还没想好</h3>
+                <p>可以放之后的模拟股票交易场的一些东西吧，排名啊啥的</p>
+                <p>下边都是我乱做的</p>
+                <p class="demo-btns"><button class="btn btn-info btn-wuxia">Info</button>
+                  <button class="btn btn-success btn-wuxia">Success</button>
+                  <button class="btn btn-warning btn-wuxia">Warning</button>
+                  <button class="btn btn-danger btn-wuxia">Danger</button>
+                  <button class="btn btn-inverse btn-wuxia">Inverse</button>
+                </p>
+                <ul class="unstyled">
+                  <li><span class="icon-ok"></span> 列表1</li>
+                  <li><span class="icon-ok"></span> 列表1</li>
+                  <li><span class="icon-ok"></span> 列表1</li>
+                  <li><span class="icon-ok"></span> 列表1</li>
+      
+                </ul>
+                <div class="pagination">
+                  <ul>
+                    <li class="disabled"><a href="#"><span class="icon-arrow-left"></span></a></li>
+                    <li class="active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#"><span class="icon-arrow-right"></span></a></li>
+                  </ul>
+                </div>
+              </article>
+              <!-- /右侧内容 -->
+      
+            </div>
+            <!-- 股票的主要部分 -->
+          </div>
+          <!-- /Tab #ui -->
+        </div>
+        <!-- /Tab content -->
       </div>
-    </div><!-- panel -->
-    {% empty %}
-  {% endfor %}
-{% endblock content %}
+      <!-- /股票区 -->
+      {% endblock more %}
+

@@ -1,19 +1,33 @@
 {% extends "forum/base.html" %}
 
-{% block header %}
-  <h2>回复评论：{{comment.text}}</h2>
-{% endblock header%}
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
 
-{% block content %}
-  
-  <p>回到评论区-<a href="{% url 'forum:show_post' post.id %}">{{ post }}</a></p>
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <h2>回复评论：{{comment.text}}</h2>
 
-  <p>回复评论：</p>
+  </div>
+  <!-- /Page header -->
 
-  <form action="{% url 'forum:response_comment' comment.id %}" method="POST">
+  <!-- Page container -->
+  <div class="page-container">
+
+    <p>回到评论区-<a href="{% url 'forum:show_post' post.id %}">{{ post }}</a></p>
+
+    <p>回复评论：</p>
+
+    <form action="{% url 'forum:response_comment' comment.id %}" method="POST">
       {% csrf_token %}
       {{ form.as_p }}
       <button name="submit">添加回复</button>
-  </form>
+    </form>
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}
 
-{% endblock content %}

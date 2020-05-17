@@ -1,20 +1,38 @@
 {% extends "forum/base.html" %}
 {% load bootstrap3 %}
 
-{% block header %}
-  <h2>添加新的板块</h2>
-{% endblock header %}
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
 
-{% block content %}
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <h2>添加新的板块</h2>
 
-  <form action="{% url 'forum:new_plate' %}" method="POST"
-  class="form">
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <form action="{% url 'forum:new_plate' %}" method="POST"
+    class="form">
 
       {% csrf_token %}
       {% bootstrap_form form %}
+      <p>板块类别：</p>
+      <input type="radio" name="market" value=0 checked>国内市场板块
+      <input type="radio" name="market" value=1>国外市场板块
+      <input type="radio" name="market" value=2>其他板块
 
       {% buttons %}
         <button name="submit" class="btn btn-primary">添加板块</button>
       {% endbuttons %}
-  </form>
-{% endblock content%}
+    </form>
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 	<head>
@@ -8,10 +9,33 @@
 		<h2>个人信息</h2>
 		<!-- 用户信息有待讨论一下具体有哪些信息 -->
 		<ul>
-			<li>用户姓名：{{ user.username }}</li>
-			<li>信息二：**</li>
-			<li>信息三：**</li>
-			<li>信息四：**</li>
+			<li>用户姓名：{{ selecteduser.username }}</li>
+			<li>
+				<p>用户头像：</p>
+				{% if userprofile.picture %}
+				<img src="{{ MEDIA_URL }}{{userprofile.picture}}" 
+				width="100"
+				height="100"
+				alt="{{ selecteduser.username }}">
+				{% else %}
+				<img src="{% static 'images/default_user.jpg' %}" 
+				width="100"
+				height="100"
+				alt="{{ selecteduser.username }}">
+				{% endif %}
+			</li>
 		</ul>
+		<div>
+			{% if selecteduser == user %}
+			<form action="{% url 'users:user_information' user.id %}" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<input type="submit" value="更新个人资料">
+			</form>
+			{% else %}
+			<li>职业：{{ userprofile.job }}</li>
+			<li>性别：{{ userprofile.get_gender_display }}</li>
+			{% endif %}
+		</div>
 	</body>
 </html>

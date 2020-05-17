@@ -1,8 +1,14 @@
 {% extends "forum/base.html" %}
 {% load static %}
 
-{% block header %}
-  <p>{{ stock_name }}</p>
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
+
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <p>{{ stock_name }}</p>
   {% if followed %}
   <a href="{% url 'forum:unfollow_stock' stock_name %}" class="btn btn-success text-right" role="button">取消关注</a>
   {% else %}
@@ -15,20 +21,30 @@
         </script>
         {% endfor %}
   {% endif %}
-{% endblock header%}
 
-{% block content %}
-<div>
-	<h3>实时价格：</h3>
-	<span>{{ current_price }}</span>
+
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <div>
+      <h3>实时价格：</h3>
+      <span>{{ current_price }}</span>
+    </div>
+    <div>
+      <!-- 默认内容：今日行情 -->
+      <h3>近期行情</h3>
+      <!-- 默认自动加载展示的内容 样式最后统一改 -->
+      <iframe src="{% static "klines/temp_custom.html" %}" name="" width="900" height="450" id=""></iframe>
+    </div>
+    <div>
+      <iframe name="htmlContent" class="bodyHtml" src="{% url 'forum:custom_kline' stock_name %}" width="900" height="450"></iframe>
+    </div>
+              
+  </div>
+  <!-- /Page container -->
 </div>
-<div>
-	<!-- 默认内容：今日行情 -->
-	<h3>近期行情</h3>
-	<!-- 默认自动加载展示的内容 样式最后统一改 -->
-	<iframe src="{% static "klines/temp_custom.html" %}" name="" width="900" height="450" id=""></iframe>
-</div>
-<div>
-	<iframe name="htmlContent" class="bodyHtml" src="{% url 'forum:custom_kline' stock_name %}" width="900" height="450"></iframe>
-</div>
-{% endblock content%}
+<!-- /主页描述 -->
+{% endblock describe %}

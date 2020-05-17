@@ -1,13 +1,36 @@
-{% extends "forum/base.html" %}
 
-{% block content %}
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>register</title>
+<!-- 这是页面式的，之后也可以根据需求改成弹窗式的-->
+<link href="{% static 'user_login.css' %}" rel="stylesheet" type="text/css" media="all"/>
 
-  <form method="POST" action="{% url 'users:register' %}">
+</head>
+<body style="padding:60px 0px 30px 0px;">
+<div class="login">
+  <h2>用户注册</h2>
+	<div class="login-top">
+		<!-- 之后可以拓展为手机号注册啥的 -->
+    <h1>创建账号</h1>
+    {% if info %}
+    <p>{{ info }}</p>
+    {% endif %}
+		<form method="POST" action="{% url 'users:register' %}">
       {% csrf_token %}
-      {{ form.as_p }}
+      {{ form}}
 
-      <button name="submit">注册</button>
+      <div class="forgot">
+	    	<input type="submit" value="注册" >
+			<!-- 判断账号密码合法后注册成功-->
+	    </div>
       <input type="hidden" name="next" value="{% url 'forum:index' %}" />
-  </form>
-
-{% endblock content %}
+    </form>
+	</div>
+	<div class="login-bottom">
+		<h3>已有账号？ &nbsp; 点我 &nbsp;<a href="{% url 'users:login' %}">直接登录</a></h3>
+	</div>
+</div>	
+</body>
+</html>

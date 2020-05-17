@@ -31,7 +31,10 @@
 				{% for plate in plates %}
 				<li>
 					<a href="{% url 'forum:plate' plate.id %}" target="_top">{{ plate }}</a>
+					{% if selecteduser == user %}
 					<div class="divButton"><a href="{% url 'forum:del_plate' plate.id %}"><button type="submit">删除板块</button></a></div>
+					{% else %}
+					{% endif %}
 				</li>
 				{% empty %}
 				<li>你还没有创建任何板块</li>

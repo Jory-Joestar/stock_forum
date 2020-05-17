@@ -1,0 +1,37 @@
+{% extends "forum/base.html" %}
+
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
+
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <h1>所有板块</h1>
+
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <ul class="list-group">
+      {% for plate in plates %}
+        <li class="list-group-item">
+            <h3>
+              <a href="{% url 'forum:plate' plate.id %}">{{ plate }}</a>
+            </h3>
+        </li>
+      {% empty %}
+        <li>当前还没有任何板块</li>
+      {% endfor %}
+    </ul>
+  
+    <h3><a href="{% url 'forum:new_plate' %}" class="btn btn-primary btn-lg btn-block" role="button">创建新的板块</a></h3>
+  
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}

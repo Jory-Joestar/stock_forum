@@ -6,7 +6,11 @@ class Plate(models.Model):
     '''论坛的板块'''
     text=models.CharField(max_length=200)
     date_added=models.DateTimeField(auto_now_add=True)
-    owner=models.ForeignKey(User,on_delete=models.CASCADE)
+    owner=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    #板块的热度，新增一篇文章热度+1
+    hot=models.IntegerField(default=0)
+    #分类，先假定 0-国内市场 1-海外市场 默认为国内市场 2-其他
+    market=models.IntegerField(default=0)
 
     def __str__(self):
         '''返回模型的字符串表示'''
