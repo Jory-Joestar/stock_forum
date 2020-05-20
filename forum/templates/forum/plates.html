@@ -45,7 +45,7 @@
   <div class="main-search">        
         <form action="{% url 'forum:index' %}" method="POST" name="search">
           {% csrf_token %}
-          <input  id="search-box" type="search" placeholder="请输入..." name="search_item" />&nbsp
+          <input  id="search-box" type="search" placeholder="请输入..." name="search_item" required/>&nbsp
           <!-- 加事件监听 -->
           <button type="submit" name="search_plate"><i>进板块</i></button>
           <button type="submit" name="search_post"><i>查文章</i></button>
