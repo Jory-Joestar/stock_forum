@@ -8,7 +8,7 @@
   <!-- Page header -->
   <div class="page-header">
               
-    <p>{{ stock_name }}</p>
+    <p><h3>{{ stock_name }} ({{ stock_code }})</h3></p>
   {% if followed %}
   <a href="{% url 'forum:unfollow_stock' stock_name %}" class="btn btn-success text-right" role="button">取消关注</a>
   {% else %}
@@ -21,7 +21,7 @@
         </script>
         {% endfor %}
   {% endif %}
-
+  <a href="{% url 'forum:stock_est' stock_code %}" class="btn btn-success text-right" role="button">股票预测</a>
 
   </div>
   <!-- /Page header -->
@@ -31,7 +31,7 @@
 
     <div>
       <h3>实时价格：</h3>
-      <span>{{ current_price }}</span>
+      <span><h4>{{ current_price }}</h4></span>
     </div>
     <div>
       <!-- 默认内容：今日行情 -->

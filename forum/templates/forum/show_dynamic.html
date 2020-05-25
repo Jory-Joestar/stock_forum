@@ -1,42 +1,137 @@
 {% extends "forum/base.html" %}
+{% load static %}
 
-{% block describe %}
-<!-- 主页描述 -->
-<div class="content">
+{% block settings %}
+<link rel="stylesheet" id="main-css-css" href="{% static 'css/article-list.css' %}" type="text/css" media="all" />
+{% endblock settings %}
 
-  <!-- Page header -->
-  <div class="page-header">
-              
-    <h1>最近文章</h1>
 
+{% block search %}
+<!-- 搜索栏 -->
+<div class="hero-unit blow">
+    <h1>
+        最近文章
+    </h1>
+    <!-- 左边网站图片展示框 -->
+    <div class="home-img">
+      <img src="{% static 'img/template_logo.png' %}">
+    </div>
+    <!-- 右侧二维码展示？放图片也行 -->
+    <div class="qr-code">
+      关
+      <br />
+      注
+      <br />
+      我
+      <br />
+      们
+      
+      <img src="{% static 'img/qr-code1.jpg' %}" /> 
+      <img src="{% static 'img/qr-code1.jpg' %}" />
+      <img src="{% static 'img/qr-code1.jpg' %}" />
+      <img src="{% static 'img/qr-code1.jpg' %}" />
+    </div>
+    <!-- /右侧二维码展示？ -->
+    <!-- 主搜索栏 -->
+    <div class="main-search">        
+          <form action="{% url 'forum:index' %}" method="POST" name="search">
+            {% csrf_token %}
+            <input  id="search-box" type="search" placeholder="请输入..." name="search_item" required/>&nbsp
+            <!-- 加事件监听 -->
+            <button type="submit" name="search_plate"><i>进板块</i></button>
+            <button type="submit" name="search_post"><i>查文章</i></button>
+            <button type="submit" name="search_stock"><i>搜股票</i></button>
+          </form>
+          
+    </div>
+    <!-- /主搜索栏 -->
+    <div class="hot-search">
+      <img src="{% static 'img/icon-hot.png' %}" /> 
+      <span style="font-weight:bold;">热门搜索：</span>
+      <!-- 为了好看 可以给他固定下来（字数比较重要 会影响排版） -->
+      <a href="#">热门搜索1</a>&nbsp&nbsp
+      <a href="#">热门搜索2</a>&nbsp&nbsp
+      <a href="#">热门搜索3</a>&nbsp&nbsp
+      <a href="#">热门搜索4</a>
+    </div>
+    
   </div>
-  <!-- /Page header -->
+  <!-- /搜索栏 -->
+{% endblock search %}
 
-  <!-- Page container -->
-  <div class="page-container">
 
-    <ul>
-      {% for post in posts %}
-      <div class="panel panel-success">
-          <div class="panel-heading">
-            <ul class="list-inline text-right">
-              <li class="pull-left"><h4><a href="{% url 'forum:plate' post.plate.id %}">{{post.plate.text}}</a><small>  --<a href="{% url 'users:user_space' post.owner.id %}">{{post.owner}}</a>,  {{ post.date_added|date:'M d, Y H:i' }}</small></h4></li>
-              <li><a href="{% url 'forum:show_post' post.id %}" class="btn btn-primary btn-sm text-right" role="button">
-                查看文章</a></li>
-            </ul>
-          </div>
-          <div class="panel-body">
-            <a href="{% url 'forum:show_post' post.id %}">{{ post }}</a>
-          </div>
-      </div><!-- panel -->
-      {% empty %}
-        <li>没有文章发布</li>
-      {% endfor %}
-    </ul>
-              
-  </div>
-  <!-- /Page container -->
+{% block more %}
+<!-- 文章 -->
+<div class="hero-unit blow">
+    <div class="container">
+        <div class="row">
+
+            <!-- 文章列表 -->
+            <div class="span8 ">
+
+                {% for post in posts %}
+
+                <article class=" type-post hentry clearfix">
+                    <header class="clearfix">
+                        <h3 class="post-title">
+                            <a href="{% url 'forum:show_post' post.id %}">{{ post.get_title }}</a>
+                        </h3>
+                        <div class="post-meta clearfix">
+                            <span class="date">{{ post.date_added|date:'M d, Y H:i' }}</span>
+                            <!-- 作者 -->
+                            <span class="author"><a href="{% url 'users:user_space' post.owner.id %}" >{{ post.owner }}</a></span>
+                            <!-- 文章所属板块 -->
+                            <span class="category"><a href="{% url 'forum:plate' post.plate.id %}" >{{ post.plate.text }}</a></span>
+                            <!-- 评论数如果不方便调用可以省略 -->
+                            <!--<span class="comments"><a href="#" >3 Comments</a></span>-->
+                        </div>
+                    </header>
+                    <!-- 默认展示多少字 考虑展示效果和文章一般字数 结尾加上三个点-->
+                    <p>{{ post }}
+                        <a class="readmore-link" href="{% url 'forum:show_post' post.id %}">Read more</a>
+                    </p>
+                </article>
+
+                {% empty %}
+                没有文章发布
+                {% endfor %}
+
+            </div>
+            <!-- /文章列表 -->
+
+            <!-- 右侧边栏 -->
+            <aside class="span4 ">
+
+                <!-- 右侧边栏如果有别的内容可以添加 -->
+                    
+                
+                <section class="widget">
+                    <h2 class="title">我的文章</h2>
+                    <ul class="articles">
+                        <li class="article-entry standard">
+                            <h4><a href="single-article.html">文章标题</a></h4>
+                            <span class="article-meta">25 Feb, 2020 in <a href="#" >所属板块</a></span>
+                            
+                        </li>
+                        <li class="article-entry standard">
+                            <h4><a href="single-article.html">文章标题</a></h4>
+                            <span class="article-meta">25 Feb, 2020 in <a href="#" >所属板块</a></span>
+                        </li>
+                        <li class="article-entry standard">
+                            <h4><a href="single-article.html">文章标题</a></h4>
+                            <span class="article-meta">25 Feb, 2020 in <a href="#" >所属板块</a></span>
+                        </li>
+                        <li class="article-entry standard">
+                            <h4><a href="single-article.html">文章标题</a></h4>
+                            <span class="article-meta">25 Feb, 2020 in <a href="#" >所属板块</a></span>
+                        </li>
+                    </ul>
+                </section>
+
+            </aside>
+            <!-- /右侧边栏 -->
+        </div>
+    </div>
 </div>
-<!-- /主页描述 -->
-{% endblock describe %}
-
+<!-- /文章 -->
+{% endblock more%}

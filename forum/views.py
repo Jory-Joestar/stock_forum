@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Plate,Post,Comment,Information
 from .forms import PlateForm,PostForm,CommentForm,GetpriceForm,GetstockForm,GetgapForm
 from extends.get_price import GetPrice
+from extends.get_est import GetEst
 #使用中间件时，有些视图可能不需要设置X-Frame-Options标头。对于这些情况，可以使用视图装饰器告知中间件不要设置标头
 from django.views.decorators.clickjacking import xframe_options_exempt
 from users.models import UserProfile,FollowingStocks,User
@@ -135,7 +136,21 @@ def show_post(request,post_id):
     else:
         followed=False
     comments=Comment.objects.filter(post=post).order_by('-date_added')
-    context={'post':post,'comments':comments,'plate':plate,'followed':followed}
+    #处理添加评论
+    if request.method!='POST':
+        #未提交评论，创建一个空表单
+        form=CommentForm()
+    else:
+        #POST提交的数据，对数据进行处理
+        form=CommentForm(data=request.POST)
+        if form.is_valid():
+            new_comment=form.save(commit=False)
+            new_comment.post=post
+            new_comment.owner=request.user
+            new_comment.save()
+            return HttpResponseRedirect(reverse('forum:show_post',
+            args=[post.id]))
+    context={'post':post,'comments':comments,'plate':plate,'followed':followed,'form':form}
     return render(request,'forum/show_post.html',context)
 
 
@@ -298,7 +313,9 @@ def stock_info(request,stock_name):
         followed=False
 
     refer=GetPrice()
-    current_price=refer.current_price(stock_name)
+    result_price=refer.current_price(stock_name)
+    stock_code=result_price[0]
+    current_price=result_price[1]
 
     start_date=(datetime.date.today() + datetime.timedelta(days = -7)).strftime("%Y%m%d")
     end_date=(datetime.date.today() + datetime.timedelta(days = -1)).strftime("%Y%m%d")
@@ -307,7 +324,7 @@ def stock_info(request,stock_name):
     print(end_date)
     refer.draw_kline(stock_name,start_date,end_date)
 
-    context={'stock_name':stock_name,'current_price':current_price,'followed':followed}
+    context={'stock_name':stock_name,'current_price':current_price,'followed':followed,'stock_code':stock_code}
     return render(request,'forum/stock_info.html',context)
 
 @xframe_options_exempt
@@ -412,3 +429,15 @@ def unfollow_stock(request,stock_name):
     else:
         messages.success(request,"取消关注失败")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def stock_est(request,stock_code):
+    ''' 股票预测 '''
+    esting=GetEst(stock_code)
+    if esting.error:
+        return HttpResponse(esting.error)
+    esting.plot_trends()
+    forecast=esting.forecast()
+    remark=esting.remark()
+    context={'forecast':forecast,'remark':remark,'stock_code':stock_code}
+    return render(request,'forum/stock_est.html',context)

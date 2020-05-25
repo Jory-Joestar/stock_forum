@@ -1,0 +1,56 @@
+{% extends 'forum/base.html' %}
+
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
+
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <h2>{{ plate }}</h2>
+    {% if followed %}
+    <a href="{% url 'forum:unfollow_plate' plate.id %}" class="btn btn-success text-right" role="button">取消关注</a>
+    {% else %}
+    <a href="{% url 'forum:follow_plate' plate.id %}" class="btn btn-success text-right" role="button">关注</a>
+    {% endif %}
+    {% if messages %}
+        {% for msg in messages %}
+        <script>
+                alert('{{ msg.message }}');
+        </script>
+        {% endfor %}
+    {% endif %}
+
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <ul class="list-inline text-right">
+      <li class="pull-left"><h4><b>全部文章:</b></h4></li>
+      <li><a href="{% url 'forum:new_post' plate.id %}" class="btn btn-success text-right" role="button">我要发帖</a></li>
+    </ul>
+  
+    {% for post in posts %}
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <h4><a href="{% url 'forum:show_post' post.id %}">{{ post }}</a></h4>
+        </div>
+        <div class="panel-footer">
+          <ul class="list-inline text-right">
+            <li class="pull-left"><small>--<a href="{% url 'users:user_space' post.owner.id %}">{{post.owner}}</a>,  {{ post.date_added|date:'M d, Y H:i' }}</small></li>
+            <br>
+          </ul>
+        </div>
+      </div><!-- panel -->
+      {% empty %}
+        当前板块下还没有文章，快去写一篇吧！
+    {% endfor %}
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}
+

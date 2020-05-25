@@ -18,8 +18,8 @@
     <div>
       <!-- 展示查询结果，做成a链接形式 -->
       <ul>
-          {% for stock in results %}
-          <li><a href="{% url 'forum:stock_info' stock %}">{{ stock }}</a></li>
+          {% for name,code in results.items %}
+          <li><a href="{% url 'forum:stock_info' name %}">{{ name }} ({{ code }})</a></li>
           {% empty %}
           <li>没有找到相关的股票</li>
           {% endfor %}

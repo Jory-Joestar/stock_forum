@@ -99,9 +99,10 @@ def get_related_name(name, pro):
     if name == '':
         return []
     basic = get_basic(pro)
-    name_list = []
+    name_list = {}
     for index in range(0, basic.shape[0]):
         basic_word = basic.loc[index]['name']
+        basic_code = basic.loc[index]['ts_code']
         search_success = True
         for number in range(0, len(name)):
             if name[number] == ' ':
@@ -110,7 +111,7 @@ def get_related_name(name, pro):
                 search_success = False
                 break
         if search_success:
-            name_list.append(basic_word)
+            name_list[basic_word]=basic_code
     return name_list
 
 

@@ -1,75 +1,168 @@
-{% extends 'forum/base.html' %}
+{% extends "forum/base.html" %}
+{% load static %}
 
-{% block describe %}
-<!-- 主页描述 -->
-<div class="content">
+{% block settings %}
+<link rel="stylesheet" id="main-css-css" href="{% static 'css/article-list.css' %}" type="text/css" media="all" />
+{% endblock settings %}
 
-  <!-- Page header -->
-  <div class="page-header">
-              
-    <div>
-      {% if  plate.text == "__private__" %}
-        <h4>日志详情</h4>
-        <h4>
-          <p>回到-<a href="{% url 'users:user_space' post.owner.id %}">个人空间</a></p>
-        </h4>
-      {% else %}
-        <h4>文章详情</h4>
-        <h4>板块：<a href="{% url 'forum:plate' plate.id %}">{{ plate }}</a></h4>
-        {% if followed %}
-        <a href="{% url 'forum:unfollow_post' post.id %}" class="btn btn-success pull-right" role="button">取消关注</a>
-        {% else %}
-        <a href="{% url 'forum:follow_post' post.id %}" class="btn btn-success pull-right" role="button">关注文章</a>
-        {% endif %}
-      {% endif %}
-    </div>
-      {% if messages %}
-            {% for msg in messages %}
-            <script>
-                    alert('{{ msg.message }}');
-            </script>
-            {% endfor %}
-      {% endif %}
-    <div class="panel-body">
-      {{ post.text|linebreaks }}
-      <div class="pull-right">  --<a href="{% url 'users:user_space' post.owner.id %}">{{post.owner}}</a>,  {{ post.date_added|date:'M d, Y H:i' }}</div>
-    </div>
 
-  </div>
-  <!-- /Page header -->
+{% block more %}
 
-  <!-- Page container -->
-  <div class="page-container">
+    {% if messages %}
+        {% for msg in messages %}
+        <script>
+            alert('{{ msg.message }}');
+        </script>
+        {% endfor %}
+    {% endif %}
 
-    <ul class="list-inline text-right">
-      <li class="pull-left"><b>所有评论：</b></li>
-      <li><a href="{% url 'forum:new_comment' post.id %}" class="btn btn-primary btn-sm text-right" role="button">添加评论</a></li>
-    </ul>
-  
-    {% for comment in comments %}
-      <div class="panel panel-default">
-        <div class="panel-body">
-          {{ comment.text|linebreaks }}
+<!-- 一篇文章 -->
+<div class="page-container">
+    <div class="container">
+        <div class="row">
+
+            <!-- 文章和评论 -->
+            <div class="span8 page-content">
+
+                <article class=" type-post format-standard hentry clearfix">
+                    <h1 class="post-title">{{ post.get_title }}
+                    <!-- 如果已经收藏了 要把内容改为取消收藏 -->
+                    {% if  plate.text == "__private__" %}
+                        <a href="{% url 'users:user_space' post.owner.id %}"><button class="btn btn-danger btn-wuxia" style="float: right;">返回个人空间</button></a>
+                    {% else %}
+                        {% if followed %}
+                        <a href="{% url 'forum:unfollow_post' post.id %}"><button class="btn btn-danger btn-wuxia" style="float: right;">取消关注</button></a>
+                        {% else %}
+                        <a href="{% url 'forum:follow_post' post.id %}"><button class="btn btn-danger btn-wuxia" style="float: right;">关注文章</button></a>
+                        {% endif %}
+                    {% endif %}
+                    </h1>
+                    <div class="post-meta clearfix">
+                        <span class="date">{{ post.date_added|date:'M d, Y H:i' }}</span>
+                        <span class="author"><a href="{% url 'users:user_space' post.owner.id %}" >{{ post.owner }}</a></span>
+                        {% if  plate.text == "__private__" %}
+                        {% else %}
+                            <span class="category"><a href="{% url 'forum:plate' post.plate.id %}" title="View all posts in Server &amp; Database">{{ post.plate.text }}</a></span>
+                        {% endif %}
+                        <!--<span class="comments"><a href="#" title="Comment on Integrating WordPress with Your Website">3 Comments</a></span>-->
+                        
+                    </div>
+                    <!-- 文章内容 -->
+                    <div>
+                        {{ post.text|linebreaks }}
+                    </div>
+                </article>
+
+                
+                <!-- 评论 -->
+                <section id="comments">
+                    <h2 id="comments-title"><span class="icon-comments"></span> 评论</h2>
+                    <!-- 评论列表 -->
+                    <ol class="commentlist">
+
+
+                      {% for comment in comments %}
+                        <li class="comment even thread-even depth-1" id="li-comment-1">
+                        <article id="comment-1">
+
+                            <a href="{% url 'users:user_space' comment.owner.id %}">
+                                <!-- 用户头像 -->
+                                 {% if comment.owner.userprofile.picture %}
+								<img src="{{ MEDIA_URL }}{{ comment.owner.userprofile.picture }}" alt="{% static 'images/default_user.jpg' %}" class="avatar avatar-60 photo" height="60" width="60"/>
+								{% else %}
+								<img src="{% static 'images/default_user.jpg' %}" alt="{% static 'images/default_user.jpg' %}" class="avatar avatar-60 photo" height="60" width="60"/>
+								{% endif %}
+                            </a>
+
+                            <div class="comment-meta">
+
+                                <h5 class="author">
+                                    <cite class="fn">
+                                        <a href="{% url 'users:user_space' comment.owner.id %}" rel="external nofollow" class="url">{{ comment.owner }}</a>
+                                    </cite>
+                                </h5>
+
+                                <p class="date">								
+                                        <time>{{ comment.date_added|date:'M d, Y H:i' }}</time>
+                                </p>
+
+                            </div><!-- end .comment-meta -->
+
+                            <div class="comment-body">
+                                {{ comment.text|linebreaks }}
+                                
+                            </div><!-- end of comment-body -->
+
+                        </article><!-- end of comment -->
+
+                        </li>
+                      {% empty %}
+                        当前文章还没有评论，快去抢沙发吧！
+                      {% endfor %}
+
+                        
+                    </ol>
+
+                    <div id="respond">
+
+                        <h3>添加评论</h3>
+
+                        <div class="cancel-comment-reply">
+                            <a rel="nofollow" id="cancel-comment-reply-link" href="#" style="display:none;">Click here to cancel reply.</a>
+                        </div>
+
+
+                        <form action="{% url 'forum:show_post' post.id %}" method="POST" id="commentform">																				
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <div>
+                                <input class="btn" name="submit" type="submit" id="submit" value="提交">
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </section><!-- end of comments -->
+                <!-- /评论 -->
+            </div>
+            <!-- /文章和评论 -->
+
+            <!-- 右侧边栏 -->
+            <aside class="span4 ">
+
+                <!-- 右侧边栏如果有别的内容可以添加 -->
+
+
+                <section class="widget">
+                    <h2 class="title">我的文章</h2>
+                    <ul class="articles">
+                        <li class="article-entry standard">
+                            <h4><a href="single-article.html">文章标题</a></h4>
+                            <span class="article-meta">25 Feb, 2020 in <a href="#">所属板块</a></span>
+
+                        </li>
+                        <li class="article-entry standard">
+                            <h4><a href="single-article.html">文章标题</a></h4>
+                            <span class="article-meta">25 Feb, 2020 in <a href="#">所属板块</a></span>
+                        </li>
+                        <li class="article-entry standard">
+                            <h4><a href="single-article.html">文章标题</a></h4>
+                            <span class="article-meta">25 Feb, 2020 in <a href="#">所属板块</a></span>
+                        </li>
+                        <li class="article-entry standard">
+                            <h4><a href="single-article.html">文章标题</a></h4>
+                            <span class="article-meta">25 Feb, 2020 in <a href="#">所属板块</a></span>
+                        </li>
+                    </ul>
+                </section>
+
+
+            </aside>
+            <!-- /右侧边栏 -->
         </div>
-        <div class="panel-footer">
-          <ul class="list-inline text-right">
-              <li>{{ comment.date_added|date:'M d, Y H:i' }} by <a href="{% url 'users:user_space' comment.owner.id %}">{{comment.owner}}</a></li>
-              <li><a href="{% url 'forum:response_comment' comment.id %}" class="btn btn-primary btn-sm text-right" role="button">
-                回复</a></li>
-              <li><a href="{% url 'forum:del_comment' comment.id %}" class="btn btn-primary btn-sm text-right" role="button">
-                删除</a></li>
-          </ul>
-        </div>
-      </div><!-- panel -->
-      {% empty %}
-        当前文章还没有评论，快去抢沙发吧！
-    {% endfor %}
-              
-  </div>
-  <!-- /Page container -->
+    </div>
 </div>
-<!-- /主页描述 -->
-{% endblock describe %}
+<!-- /文章 -->
 
-
-
+{% endblock more %}

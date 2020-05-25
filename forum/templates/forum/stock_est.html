@@ -1,0 +1,36 @@
+{% extends "forum/base.html" %}
+{% load static %}
+
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
+
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <p><h3>{{ stock_code }}</h3></p>
+
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <div>
+      <h3> 预测价格：</h3>
+      <span><h4>{{ forecast }}</h4></span>
+      <h3> 推荐评价：</h3>
+      <span><h4>{{ remark }}</h4></span>
+    </div>
+    <div>
+      <!-- 默认内容：今日行情 -->
+      <h3>预测趋势对比</h3>
+      <!-- 默认自动加载展示的内容 样式最后统一改 -->
+      <img src="{% static 'trends/stock_trends.jpg' %}" alt="趋势预测失败" width="900" height="450"/>
+    </div>
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}

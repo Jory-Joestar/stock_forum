@@ -22,6 +22,7 @@ class Post(models.Model):
     text=models.TextField()
     date_added=models.DateTimeField(auto_now_add=True)
     owner=models.ForeignKey(User,on_delete=models.CASCADE)
+    title=models.CharField(max_length=20,blank=True,null=True)
     
     class Meta:
         verbose_name_plural='posts'
@@ -29,6 +30,12 @@ class Post(models.Model):
     def __str__(self):
         '''返回模型的字符串表示'''
         return self.text[:50]+"..."
+
+    def get_title(self):
+        if self.title:
+            return self.title
+        else:
+            return self.text[:5]+"..."
 
 class Comment(models.Model):
     '''对于某条帖子的评论'''

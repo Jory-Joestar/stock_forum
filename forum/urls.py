@@ -52,4 +52,6 @@ urlpatterns=[
     url(r'^follow_stock/(?P<stock_name>\S+)/$',views.follow_stock,name='follow_stock'),
     #取消关注某个股票
     url(r'^unfollow_stock/(?P<stock_name>\S+)/$',views.unfollow_stock,name='unfollow_stock'),
+    #股票预测页面
+    url(r'^stock_est/(?P<stock_code>\S+)/$',views.stock_est ,name='stock_est'),
 ]

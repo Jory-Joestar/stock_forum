@@ -1,0 +1,42 @@
+{% extends "forum/base.html" %}
+
+{% block describe %}
+<!-- 主页描述 -->
+<div class="content">
+
+  <!-- Page header -->
+  <div class="page-header">
+              
+    <h1>最近文章</h1>
+
+  </div>
+  <!-- /Page header -->
+
+  <!-- Page container -->
+  <div class="page-container">
+
+    <ul>
+      {% for post in posts %}
+      <div class="panel panel-success">
+          <div class="panel-heading">
+            <ul class="list-inline text-right">
+              <li class="pull-left"><h4><a href="{% url 'forum:plate' post.plate.id %}">{{post.plate.text}}</a><small>  --<a href="{% url 'users:user_space' post.owner.id %}">{{post.owner}}</a>,  {{ post.date_added|date:'M d, Y H:i' }}</small></h4></li>
+              <li><a href="{% url 'forum:show_post' post.id %}" class="btn btn-primary btn-sm text-right" role="button">
+                查看文章</a></li>
+            </ul>
+          </div>
+          <div class="panel-body">
+            <a href="{% url 'forum:show_post' post.id %}">{{ post }}</a>
+          </div>
+      </div><!-- panel -->
+      {% empty %}
+        <li>没有文章发布</li>
+      {% endfor %}
+    </ul>
+              
+  </div>
+  <!-- /Page container -->
+</div>
+<!-- /主页描述 -->
+{% endblock describe %}
+

@@ -5075,10 +5075,7 @@ a.badge:hover {
 }
 
 .hero-unit p {
-	font-size: 18px;
-	font-weight: 200;
-	line-height: 27px;
-	color: inherit;
+	
 }
 
 .pull-right {
@@ -11192,7 +11189,7 @@ footer.container p a:hover {
 
 .hero-unit.wuxify-me p,
 .hero-unit.blow p {
-	margin-top: 10px;
+	margin-top: 0px;
 }
 
 .hero-unit.blow {
