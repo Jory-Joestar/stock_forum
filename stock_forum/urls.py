@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path(r'users/',include(('users.urls','users'),namespace='users')),
     path(r'',include(('forum.urls','forum'),namespace='forum')),
+    path(r'mockexchange/', include(('mockexchange.urls', 'mockexchange'), namespace='mockexchange')),
     #inlcude 第一个参数需要传一个元组
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)  #通过/media/URL访问media中的媒体文件

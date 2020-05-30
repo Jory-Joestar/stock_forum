@@ -1,0 +1,90 @@
+{% extends "forum/base.html" %}
+{% load static %}
+
+{% block search %}
+<!-- 搜索栏 -->
+<div class="hero-unit blow">
+  <h1>模拟交易大厅</h1>
+  <!-- 左边网站图片展示框 -->
+  <div class="home-img">
+    <img src="{% static 'img/template_logo.png' %}">
+  </div>
+  <!-- 右侧二维码展示？放图片也行 -->
+  <div class="qr-code">
+    关
+    <br />
+    注
+    <br />
+    我
+    <br />
+    们
+    
+    <img src="{% static 'img/qr-code1.jpg' %}" /> 
+    <img src="{% static 'img/qr-code1.jpg' %}" />
+    <img src="{% static 'img/qr-code1.jpg' %}" />
+    <img src="{% static 'img/qr-code1.jpg' %}" />
+  </div>
+  <!-- /右侧二维码展示？ -->
+  <!-- 主搜索栏 -->
+  <div class="main-search">        
+        <form action="{% url 'forum:index' %}" method="POST" name="search">
+          {% csrf_token %}
+          <input  id="search-box" type="search" placeholder="请输入..." name="search_item" required/>&nbsp
+          <!-- 加事件监听 -->
+          <button type="submit" name="search_plate"><i>进板块</i></button>
+          <button type="submit" name="search_post"><i>查文章</i></button>
+          <button type="submit" name="search_stock"><i>搜股票</i></button>
+        </form>
+        
+  </div>
+  <!-- /主搜索栏 -->
+  <div class="hot-search">
+    <img src="{% static 'img/icon-hot.png' %}" /> 
+    <span style="font-weight:bold;">热门搜索：</span>
+    <!-- 为了好看 可以给他固定下来（字数比较重要 会影响排版） -->
+    <a href="#">热门搜索1</a>&nbsp&nbsp
+    <a href="#">热门搜索2</a>&nbsp&nbsp
+    <a href="#">热门搜索3</a>&nbsp&nbsp
+    <a href="#">热门搜索4</a>
+  </div>
+  
+</div>
+<!-- /搜索栏 -->
+{% endblock search %}
+
+{% block more %}
+<div class="hero-unit blow">
+    <div class="nav-secondary inverse">
+        <nav>
+          <ul>
+            <li><a class="wuxify-me" href="/mockexchange/userinfo/"><span class="icon-user"></span>账户信息</a></li>
+            <li><a class="wuxify-me" href="/mockexchange/buy/"><span class="icon-shopping-cart"></span>买入</a></li>
+            <li><a class="wuxify-me" href="/mockexchange/sell/"><span class="icon-upload-alt"></span>卖出</a></li>
+            <li><a class="wuxify-me" href="/mockexchange/cancel/"><span class="icon-undo"></span>撤销委托</a></li>
+          </ul>
+        </nav>
+      </div>
+</div>
+
+<div class="content">
+
+    <!-- Page header -->
+    <div class="page-header">
+                
+      <h1>交易规则</h1>
+  
+    </div>
+    <!-- /Page header -->
+  
+    <!-- Page container -->
+    <div class="page-container">
+        <ul>
+            <li><h3>每个用户初始资产200000，初始现金200000，资产=现金+持有股票的市值</h3></li>
+            <li><h3>提交买入委托时，当且仅当委托的价格*数量小于等于现金时才能提交。提交成功后，资产和现金减去价格*数量。若撤销该委托，资产和现金复原。买入委托成交后，会添加的持有股票，该部分余额为冻结余额，第二天解冻，资产会加上这部分的市值</h3></li>
+            <li><h3>提交卖出委托时，当且仅当持有该股票的数量大于等于委托的数量才能提交。提交成功后，持有的该股票可用余额和冻结余额分别减去和加上委托的数量。若撤销该委托，余额复原。卖出委托成交后，冻结余额会减去该部分数量，资产和现金会相应增加</h3></li>
+            <li><h3>交易时间：每周一到周五上午时段9:30-11:30，下午时段13:00-15:00。周六、周日以及公告的休市日不交易。</h3></li>
+        </ul>
+    </div>
+    <!-- /Page container -->
+</div>
+{% endblock more %}

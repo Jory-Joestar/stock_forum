@@ -7,6 +7,9 @@ class UserProfile(models.Model):
     owner = models.OneToOneField(User,on_delete=models.CASCADE)
     following_post = models.ManyToManyField(Post)
     following_plate = models.ManyToManyField(Plate)
+    #用户用于模拟交易的信息
+    cash = models.FloatField(default=200000)
+    capital = models.FloatField(default=200000)
     #用户可以补充的资料
     #工作
     job=models.CharField(max_length=10,blank=True,null=True)
@@ -16,7 +19,7 @@ class UserProfile(models.Model):
     picture=models.ImageField(upload_to='profile_images',blank=True,null=True)
 
     def __str__(self): 
-        return self.auth.username
+        return self.owner.username
 
 class FollowingStocks(models.Model):
     '''

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     #myapp
     'forum',
     'users',
+    'mockexchange',
 ]
 
 MIDDLEWARE = [
