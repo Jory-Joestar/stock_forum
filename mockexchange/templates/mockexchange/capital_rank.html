@@ -1,6 +1,10 @@
 {% extends "forum/base.html" %}
 {% load static %}
 
+{% block settings %}
+<link rel="stylesheet" id="main-css-css" href="{% static 'css/article-list.css' %}" type="text/css" media="all" />
+{% endblock settings %}
+
 {% block search %}
 <!-- 搜索栏 -->
 <div class="hero-unit blow">
@@ -59,39 +63,77 @@
     <!-- Page header -->
     <div class="page-header">
                 
-      <h1>撤销委托</h1>
+      <h1>排行榜</h1>
   
     </div>
     <!-- /Page header -->
   
     <!-- Page container -->
     <div class="page-container">
-        <form id="cancel_form" method="post" action="/mockexchange/cancel/">
-            {% csrf_token %}
-            {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-            {% for field in form.visible_fields %}
-                {{ field.errors }}
-                {{ field.help_text }}
-                {{ field }}
-            {% endfor %}
-            <input type="submit" name="submit" value="cancel" />
-        </form>
-
-        <h3>委托列表</h3>
-        {% for commission in commission_list %}
-        <ul>
-            日期：{{ commission.date }}, 时间：{{ commission.time1 }}, 代码：{{ commission.code }},
-            名称：{{ commission.name }}, 操作：{{ commission.operation }}, 备注：{{ commission.note }},
-            数量：{{ commission.amount }}, 价格：{{ commission.price }}, 序号：{{ commission.index }}
-        </ul>
-        {% empty %}
-        <ul>没有委托记录</ul>
-        {% endfor %}
+        <div class="row">
+            <article class="span6">
+                <h3>资产排行榜</h3>
+                <table class="datatable table table-striped table-bordered" id="example">
+                    <tbody>
+                        {% for profile in capital_rank_list %}
+    
+                        <tr class="odd gradeX">
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <a href="{% url 'users:user_space' profile.owner.id %}">
+                                    <!-- 用户头像 -->
+                                     {% if profile.picture %}
+                                    <img src="{{ MEDIA_URL }}{{ profile.picture }}" alt="{% static 'images/default_user.jpg' %}" class="avatar avatar-60 photo" height="60" width="60"/>
+                                    {% else %}
+                                    <img src="{% static 'images/default_user.jpg' %}" alt="{% static 'images/default_user.jpg' %}" class="avatar avatar-60 photo" height="60" width="60"/>
+                                    {% endif %}
+                                </a>
+                                <a href="{% url 'users:user_space' profile.owner.id %}" rel="external nofollow" class="url">{{ profile.owner }}</a>
+                                总资产：{{ profile.capital }}
+                            </td>
+                        </tr>
+    
+                        {% empty %}
+                            没有用户
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+            </article>
+            <article class="span6">
+                <h3>现金排行榜</h3>
+                <table class="datatable table table-striped table-bordered" id="example">
+                    <tbody>
+                        {% for profile in cash_rank_list %}
+    
+                        <tr class="odd gradeX">
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <a href="{% url 'users:user_space' profile.owner.id %}">
+                                    <!-- 用户头像 -->
+                                     {% if profile.picture %}
+                                    <img src="{{ MEDIA_URL }}{{ profile.picture }}" alt="{% static 'images/default_user.jpg' %}" class="avatar avatar-60 photo" height="60" width="60"/>
+                                    {% else %}
+                                    <img src="{% static 'images/default_user.jpg' %}" alt="{% static 'images/default_user.jpg' %}" class="avatar avatar-60 photo" height="60" width="60"/>
+                                    {% endif %}
+                                </a>
+                                <a href="{% url 'users:user_space' profile.owner.id %}" rel="external nofollow" class="url">{{ profile.owner }}</a>
+                                现金额：{{ profile.capital }}
+                            </td>
+                        </tr>
+    
+                    {% empty %}
+                    没有用户
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </article>
+        </div>
+        
     </div>
     <!-- /Page container -->
 </div>
+
 
 <div class="hero-unit blow">
     <div class="nav-secondary inverse">
@@ -100,7 +142,6 @@
             <li><a class="wuxify-me" href="/mockexchange/userinfo/"><span class="icon-user"></span>账户信息</a></li>
             <li><a class="wuxify-me" href="/mockexchange/buy/"><span class="icon-shopping-cart"></span>买入</a></li>
             <li><a class="wuxify-me" href="/mockexchange/sell/"><span class="icon-upload-alt"></span>卖出</a></li>
-            <li><a class="wuxify-me" href="/mockexchange/cancel/"><span class="icon-undo"></span>撤销委托</a></li>
             <li><a class="wuxify-me" href="/mockexchange/capital_rank/"><span class="icon-sort"></span>排行榜</a></li>
           </ul>
         </nav>

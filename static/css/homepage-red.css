@@ -35,9 +35,8 @@ html {
 
 .home-img {
 	width: 20%;
-	height: 80px;
+	height: 100px;
 	float: left;
-	margin-bottom: 10px;
 	display: flex;
 	/* border: 1px solid blue; */
 }
@@ -45,6 +44,7 @@ html {
 /* 搜索框 */
 .main-search {
 	/* float: left; */
+	margin-top: 25px;
 	width: 40%;
 	height: 40px;
 	/* margin:  auto; */
@@ -64,7 +64,7 @@ html {
 
 .main-search button {
 	float: right;
-	flex: 1;
+	
 	height: 40px;
 	width: 16%;
 	background-color: red;
@@ -99,6 +99,7 @@ html {
 .qr-code {
 	float: right;
 	width: 38%;
+	margin-top: 15px;
 	height: 80px;
 	/* position: relative; */
 	display: flex;

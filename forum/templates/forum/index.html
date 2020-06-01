@@ -20,9 +20,9 @@
     们
     
     <img src="{% static 'img/qr-code1.jpg' %}" /> 
-    <img src="{% static 'img/qr-code1.jpg' %}" />
-    <img src="{% static 'img/qr-code1.jpg' %}" />
-    <img src="{% static 'img/qr-code1.jpg' %}" />
+    <img src="{% static 'img/qr-code2.jpg' %}" />
+    <img src="{% static 'img/qr-code3.jpg' %}" />
+    <img src="{% static 'img/qr-code4.jpg' %}" />
   </div>
   <!-- /右侧二维码展示？ -->
   <!-- 主搜索栏 -->
@@ -60,10 +60,32 @@
   <!-- Page header -->
   <div class="page-header">
               
-    <h1>xx论坛,股票投资者的不二选择!</h1>
+    <h1>卓越股吧,股票投资者的不二选择!</h1>
 	<ul class="page-header-actions">
-	  <li><a href="" class="btn btn-wuxia btn-inverse pull-right" title="Official Bootstrap website" target="_blank"><span
-			class="icon-bookmark"></span> 按钮内容还没想好</a></li>
+	  <!--<li><a href="" class="btn btn-wuxia btn-inverse pull-right" target="_blank"><span
+      class="icon-bookmark"></span> 收藏本站</a></li>-->
+    <li>
+      <a onclick='AddFavorite("http://www.beststockforum.cn:8000","卓越股吧")' href="javascript:void(0)" class="btn btn-wuxia btn-inverse pull-right"><span
+        class="icon-bookmark"></span> 收藏本站</a>
+    </li>
+
+		  <script type="text/javascript" language="javascript">
+		        //加入收藏
+		        function AddFavorite(sURL, sTitle) {
+		            sURL = encodeURI(sURL); 
+		        try{  
+		            window.external.addFavorite(sURL, sTitle);  
+		        }catch(e) {  
+		            try{  
+		                window.sidebar.addPanel(sTitle, sURL, "");  
+		            }catch (e) {  
+		                alert("加入收藏失败，请使用Ctrl+D进行添加,或手动在浏览器里进行设置.");
+		            }  
+		        }
+		    }
+		 
+		  </script>
+
   </ul>
 
   </div>
@@ -77,15 +99,19 @@
 
 		<!-- Page grid cell (4 blocks) -->
 		<article class="span4">
-			<p class="lead">网站描述的内容?还是其他内容,之后再决定</p>
-			<p>网站描述的内容?还是其他内容,之后再决定</p>
-			<p>网站描述的内容?还是其他内容,之后再决定</p>
+			<p class="lead">集论坛、模拟交易、信息服务为一体的股票社区,实时行情评论和个股交流让你感受到证券经济的力量。</p>
+			<p>进入板块，了解行情动态。</p>
+      <p>发帖评论，分享投资心得。</p>
+      <p>模拟交易，让你大显身手。</p>
+      <p>更多投资讯息，尽在卓越股票论坛！</p>
 		</article>
 		<!-- /Page grid cell (4 blocks) -->
 
 		<!-- Page grid cell (8 blocks) -->
 		<article class="span8">
-			<div id="flot" class="flot dashboard"></div>
+      <!--<div id="flot" class="flot dashboard"></div>-->
+      <img src="{% static 'trends/zhishu.jpg' %}" alt="大盘走势" width="700" height="300"/>
+      <div style='text-align: center;'><p>上证大盘走势</p></div>
 		</article>
 		<!-- /Page grid cell (8 blocks) -->
 	</div>
@@ -102,19 +128,17 @@
       <!-- 热门板块 -->
       <div class="hero-unit blow">
         <h1>热门板块</h1>
-        <p>放一点描述?图标之后再改</p>
+        <br>
         <div class="nav-secondary inverse">
           <nav>
-            <ul>
-              <!-- 图标之后再改 -->
-              <li><a class="wuxify-me" href=""><span class="icon-signal"></span>南京银行</a></li>
-              <li><a class="wuxify-me" href=""><span class="icon-picture"></span>中国平安</a></li>
-              <li><a class="wuxify-me" href=""><span class="icon-file"></span>阿里巴巴</a></li>
-              <li><a class="wuxify-me" href=""><span class="icon-calendar"></span>中国国旅</a></li>
-              <li><a class="wuxify-me" href=""><span class="icon-th"></span>快递板块</a></li>
-              <li><a class="wuxify-me" href=""><span class="icon-heart"></span>我的关注</a><span
-                  class="badge badge-inverse">6</span></li>
-            </ul>
+              <ul>
+                  <!-- 图标之后再改 -->
+                  {% for hot in hot_plates %}
+                  <li><a class="wuxify-me" href="{% url 'forum:plate' hot.id %}"><span class="icon-tag"></span>{{ hot }}</a></li>
+                  {% empty %}
+                  <li><a class="wuxify-me" href="{% url 'forum:new_plate' %}"><span class="icon-plus"></span>新建板块</a></li>
+                  {% endfor %}
+              </ul>
           </nav>
         </div>
       </div>
@@ -142,10 +166,10 @@
                   <!-- 文章的链接形式还没有做 -->
                   <!-- 文章中如果有图片 就做个轮播 -->
                   <ul>
-                    <li><a class="" href="">文章1</a></li>
-                    <li><a class="" href="">文章2</a></li>
-                    <li><a class="" href="">文章3</a></li>
-                    <li><a class="" href="">文章4</a></li>
+                    {% for hot in hot_posts %}
+                    <li><h4><a class="" href="{% url 'forum:show_post' hot.id %}">{{ hot }}</a></h4></li>
+                    <br>
+                    {% endfor %}
                   </ul>
                 </nav>
               </div>
@@ -176,31 +200,31 @@
               <h2 align="center">今日优质股票推荐</h2>
               <br>
               <div class="span3 center">
-                <a href="">
-                  <h3>推荐股票1</h3>
+                <a href="{% url 'forum:stock_info' '省广集团' %}">
+                  <h3>省广集团</h3>
                 </a>
-                <p>股票1推荐理由</p>
+                <p>深市最热股</p>
               </div>
       
               <div class="span3 center">
-                <a href="">
-                  <h3>推荐股票2</h3>
+                <a href="{% url 'forum:stock_info' '贵州茅台' %}">
+                  <h3>贵州茅台</h3>
                 </a>
-                <p>股票2推荐理由</p>
+                <p>沪市最热股</p>
               </div>
       
               <div class="span3 center">
-                <a href="">
-                  <h3>推荐股票3</h3>
+                <a href="{% url 'forum:stock_info' '凌志软件' %}">
+                  <h3>凌志软件</h3>
                 </a>
-                <p>股票3推荐理由</p>
+                <p>科创板最热股</p>
               </div>
       
               <div class="span3 center">
-                <a href="">
-                  <h3>推荐股票4</h3>
+                <a href="{% url 'forum:stock_info' '中国平安' %}">
+                  <h3>中国平安</h3>
                 </a>
-                <p>股票4推荐理由</p>
+                <p>卓越股吧最热股</p>
               </div>
             </div>
             <!-- /四个推荐股票 -->
@@ -228,42 +252,42 @@
                   <!-- 这里是日后的股票数据 -->
                   <tbody>
                     <tr class="odd gradeX">
-                      <td>南京银行</td>
-                      <td>24.56</td>
-                      <td>+7.6%</td>
-                      <td>132.2</td>
-                      <td>AAA</td>
+                        <td><a href="{% url 'forum:stock_info' '南京银行' %}">南京银行</a></td>
+                        <td>24.56</td>
+                        <td>+7.6%</td>
+                        <td>132.2</td>
+                        <td>AAA</td>
                     </tr>
                     <tr class="even gradeC">
-                      <td>中国平安</td>
+                      <td><a href="{% url 'forum:stock_info' '中国平安' %}">中国平安</a></td>
                       <td>86.54</td>
                       <td>-0.15%</td>
                       <td>652.2</td>
                       <td>AA</td>
                     </tr>
                     <tr class="odd gradeA">
-                      <td>测试股票</td>
+                      <td><a href="{% url 'forum:stock_info' '浦发银行' %}">浦发银行</a></td>
                       <td>17.5</td>
                       <td>+1.31%</td>
                       <td>5.5</td>
                       <td>A</td>
                     </tr>
                     <tr class="even gradeA">
-                      <td>测试股票</td>
+                      <td><a href="{% url 'forum:stock_info' '白云机场' %}">白云机场</a></td>
                       <td>17.6</td>
                       <td>-0.25%</td>
                       <td>6</td>
                       <td>A</td>
                     </tr>
                     <tr class="odd gradeA">
-                      <td>测试股票</td>
+                      <td><a href="{% url 'forum:stock_info' '东风汽车' %}">东风汽车</a></td>
                       <td>27</td>
                       <td>-0.95%</td>
                       <td>7</td>
                       <td>A</td>
                     </tr>
                     <tr class="even gradeA">
-                      <td>测试股票</td>
+                      <td><a href="{% url 'forum:stock_info' '中国国贸' %}">中国国贸</a></td>
                       <td>65.25</td>
                       <td>-0.25%</td>
                       <td>6</td>
@@ -271,14 +295,14 @@
                     </tr>
       
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '上海机场' %}">上海机场</a></td>
                       <td>91.0</td>
                       <td>-0.25%</td>
                       <td>1.8</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '首创股份' %}">首创股份</a></td>
                       <td>91.5</td>
                       <td>-0.56%</td>
                       <td>1.8</td>
@@ -286,77 +310,77 @@
                     </tr>
       
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '包钢股份' %}">包钢股份</a></td>
                       <td>36.29</td>
                       <td>-0.25%</td>
                       <td>1.8</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '华能国际' %}">华能国际</a></td>
                       <td>51.06</td>
                       <td>+1.31%</td>
                       <td>1</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '中国石化' %}">中国石化</a></td>
                       <td>51.12</td>
                       <td>+1.31%</td>
                       <td>136</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '日照港' %}">日照港</a></td>
                       <td>51.2</td>
                       <td>+1.31%</td>
                       <td>12</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '宝钢股份' %}">宝钢股份</a></td>
                       <td>51.3</td>
                       <td>+1.31%</td>
                       <td>133</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '上海电力' %}">上海电力</a></td>
                       <td>51.4</td>
                       <td>+1.31%</td>
                       <td>184</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '民生银行' %}">民生银行</a></td>
                       <td>51.5</td>
                       <td>+1.31%</td>
                       <td>165</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '上港集团' %}">上港集团</a></td>
                       <td>51.6</td>
                       <td>+1.31%</td>
                       <td>186</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '江苏阳光' %}">江苏阳光</a></td>
                       <td>51.7</td>
                       <td>-0.25%</td>
                       <td>167</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '东风科技' %}">东风科技</a></td>
                       <td>51.8</td>
                       <td>-0.25%</td>
                       <td>148</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票3</td>
+                      <td><a href="{% url 'forum:stock_info' '上汽集团' %}">上汽集团</a></td>
                       <td>21.1</td>
                       <td>-0.25%</td>
                       <td>163</td>
@@ -364,35 +388,35 @@
                     </tr>
       
                     <tr class="gradeA">
-                      <td>测试股票7</td>
+                      <td><a href="{% url 'forum:stock_info' '浙江医药' %}">浙江医药</a></td>
                       <td>21.2</td>
                       <td>-0.56%</td>
                       <td>125.5</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票7</td>
+                      <td><a href="{% url 'forum:stock_info' '浙江广厦' %}">浙江广厦</a></td>
                       <td>21.3</td>
                       <td>-0.56%</td>
                       <td>312.8</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票7</td>
+                      <td><a href="{% url 'forum:stock_info' '武汉控股' %}">武汉控股</a></td>
                       <td>22.0</td>
                       <td>-0.26%</td>
                       <td>419.3</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票7</td>
+                      <td><a href="{% url 'forum:stock_info' '同仁堂' %}">同仁堂</a></td>
                       <td>23.0</td>
                       <td>-0.26%</td>
                       <td>522.1</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票7</td>
+                      <td><a href="{% url 'forum:stock_info' '中船科技' %}">中船科技</a></td>
                       <td>1.35</td>
                       <td>-0.26%</td>
                       <td>420</td>
@@ -400,56 +424,56 @@
                     </tr>
       
                     <tr class="gradeA">
-                      <td>测试股票7</td>
+                      <td><a href="{% url 'forum:stock_info' '楚天高速' %}">楚天高速</a></td>
                       <td>60.25</td>
                       <td>-0.95%</td>
                       <td>413</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票6</td>
+                      <td><a href="{% url 'forum:stock_info' '国农科技' %}">国农科技</a></td>
                       <td>47.0</td>
                       <td>+1.31%</td>
                       <td>326</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票6</td>
+                      <td><a href="{% url 'forum:stock_info' '世纪星源' %}">世纪星源</a></td>
                       <td>47.5</td>
                       <td>+1.31%</td>
                       <td>235</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票6</td>
+                      <td><a href="{% url 'forum:stock_info' '深粮控股' %}">深粮控股</a></td>
                       <td>48.0</td>
                       <td>+1.31%</td>
                       <td>326</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票6</td>
+                      <td><a href="{% url 'forum:stock_info' '深圳华强' %}">深圳华强</a></td>
                       <td>48.5</td>
                       <td>+1.31%</td>
                       <td>326</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票6</td>
+                      <td><a href="{% url 'forum:stock_info' '中兴通讯' %}">中兴通讯</a></td>
                       <td>49.0</td>
                       <td>+1.31%</td>
                       <td>126</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票6</td>
+                      <td><a href="{% url 'forum:stock_info' '美的集团' %}">美的集团</a></td>
                       <td>49.2</td>
                       <td>+6.32%</td>
                       <td>126</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票6</td>
+                      <td><a href="{% url 'forum:stock_info' '南京公用' %}">南京公用</a></td>
                       <td>49.5</td>
                       <td>+6.32%</td>
                       <td>326</td>
@@ -458,91 +482,91 @@
       
       
                     <tr class="gradeA">
-                      <td>测试股票6</td>
+                      <td><a href="{% url 'forum:stock_info' '华天酒店' %}">华天酒店</a></td>
                       <td>324.25</td>
                       <td>+4.63%</td>
                       <td>856</td>
                       <td>AA</td>
                     </tr>
                     <tr class="gradeC">
-                      <td>测试股票4</td>
+                      <td><a href="{% url 'forum:stock_info' '深圳机场' %}">深圳机场</a></td>
                       <td>83.12</td>
                       <td>-0.29%</td>
                       <td>3.1</td>
                       <td>C</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票4</td>
+                      <td><a href="{% url 'forum:stock_info' '合肥百货' %}">合肥百货</a></td>
                       <td>83.33</td>
                       <td>-0.15%</td>
                       <td>3.3</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票4</td>
+                      <td><a href="{% url 'forum:stock_info' '苏宁环球' %}">苏宁环球</a></td>
                       <td>83.5</td>
                       <td>+5.25%</td>
                       <td>3.5</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeX">
-                      <td>测试股票2</td>
+                      <td><a href="{% url 'forum:stock_info' '东方财富' %}">东方财富</a></td>
                       <td>24.52</td>
                       <td>-0.35%</td>
                       <td>326</td>
                       <td>B</td>
                     </tr>
                     <tr class="gradeC">
-                      <td>测试股票2</td>
+                      <td><a href="{% url 'forum:stock_info' '国药股份' %}">国药股份</a></td>
                       <td>25.1</td>
                       <td>+3.25%</td>
                       <td>1</td>
                       <td>C</td>
                     </tr>
                     <tr class="gradeC">
-                      <td>测试股票2</td>
+                      <td><a href="{% url 'forum:stock_info' '神州高铁' %}">神州高铁</a></td>
                       <td>25.2</td>
                       <td>+4.25%</td>
                       <td>1</td>
                       <td>C</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票5</td>
+                      <td><a href="{% url 'forum:stock_info' '南京证券' %}">南京证券</a></td>
                       <td>63.1</td>
                       <td>-5.12%</td>
                       <td>326</td>
                       <td>C</td>
                     </tr>
                     <tr class="gradeA">
-                      <td>测试股票5</td>
+                      <td><a href="{% url 'forum:stock_info' '长城动漫' %}">长城动漫</a></td>
                       <td>63.4</td>
                       <td>-5.12%</td>
                       <td>326</td>
                       <td>A</td>
                     </tr>
                     <tr class="gradeX">
-                      <td>测试股票5</td>
+                      <td><a href="{% url 'forum:stock_info' '中信国安' %}">中信国安</a></td>
                       <td>36.21</td>
                       <td>-5.12%</td>
                       <td>326</td>
                       <td>B</td>
                     </tr>
                     <tr class="gradeX">
-                      <td>测试股票5</td>
+                      <td><a href="{% url 'forum:stock_info' '双汇发展' %}">双汇发展</a></td>
                       <td>32.58</td>
                       <td>+0.56%</td>
                       <td>326</td>
                       <td>B</td>
                     </tr>
                     <tr class="gradeX">
-                      <td>测试股票5</td>
+                      <td><a href="{% url 'forum:stock_info' '酒鬼酒' %}">酒鬼酒</a></td>
                       <td>23.58</td>
                       <td>+0.56%</td>
                       <td>326</td>
                       <td>B</td>
                     </tr>
                     <tr class="gradeU">
-                      <td>茅台</td>
+                      <td><a href="{% url 'forum:stock_info' '贵州茅台' %}">贵州茅台</a></td>
                       <td>1125.3</td>
                       <td>+1.2%</td>
                       <td>3625</td>
@@ -555,32 +579,33 @@
       
               <!-- 右侧内容 -->
               <article class="span4">
-                <h3>这里放啥我还没想好</h3>
-                <p>可以放之后的模拟股票交易场的一些东西吧，排名啊啥的</p>
-                <p>下边都是我乱做的</p>
-                <p class="demo-btns"><button class="btn btn-info btn-wuxia">Info</button>
-                  <button class="btn btn-success btn-wuxia">Success</button>
-                  <button class="btn btn-warning btn-wuxia">Warning</button>
-                  <button class="btn btn-danger btn-wuxia">Danger</button>
-                  <button class="btn btn-inverse btn-wuxia">Inverse</button>
-                </p>
-                <ul class="unstyled">
-                  <li><span class="icon-ok"></span> 列表1</li>
-                  <li><span class="icon-ok"></span> 列表1</li>
-                  <li><span class="icon-ok"></span> 列表1</li>
-                  <li><span class="icon-ok"></span> 列表1</li>
-      
-                </ul>
-                <div class="pagination">
-                  <ul>
-                    <li class="disabled"><a href="#"><span class="icon-arrow-left"></span></a></li>
-                    <li class="active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#"><span class="icon-arrow-right"></span></a></li>
-                  </ul>
-                </div>
+                <h3>资产排行榜</h3>
+                <table class="datatable table table-striped table-bordered" id="example">
+                    <tbody>
+                        {% for profile in capital_rank_list %}
+    
+                        <tr class="odd gradeX">
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <a href="{% url 'users:user_space' profile.owner.id %}">
+                                    <!-- 用户头像 -->
+                                     {% if profile.picture %}
+                                    <img src="{{ MEDIA_URL }}{{ profile.picture }}" alt="{% static 'images/default_user.jpg' %}" class="avatar avatar-60 photo" height="60" width="60"/>
+                                    {% else %}
+                                    <img src="{% static 'images/default_user.jpg' %}" alt="{% static 'images/default_user.jpg' %}" class="avatar avatar-60 photo" height="60" width="60"/>
+                                    {% endif %}
+                                </a>
+                                <a href="{% url 'users:user_space' profile.owner.id %}" rel="external nofollow" class="url">{{ profile.owner }}</a>
+                                总资产：{{ profile.capital }}
+                            </td>
+                        </tr>
+    
+                        {% empty %}
+                            没有用户
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
               </article>
               <!-- /右侧内容 -->
       

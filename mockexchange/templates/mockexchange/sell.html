@@ -2,6 +2,15 @@
 {% load static %}
 
 {% block search %}
+
+{% if messages %}
+  {% for msg in messages %}
+    <script>
+      alert('{{ msg.message }}');
+    </script>
+  {% endfor %}
+{% endif %}
+
 <!-- 搜索栏 -->
 <div class="hero-unit blow">
   <h1>模拟交易大厅</h1>
@@ -20,9 +29,9 @@
     们
     
     <img src="{% static 'img/qr-code1.jpg' %}" /> 
-    <img src="{% static 'img/qr-code1.jpg' %}" />
-    <img src="{% static 'img/qr-code1.jpg' %}" />
-    <img src="{% static 'img/qr-code1.jpg' %}" />
+    <img src="{% static 'img/qr-code2.jpg' %}" />
+    <img src="{% static 'img/qr-code3.jpg' %}" />
+    <img src="{% static 'img/qr-code4.jpg' %}" />
   </div>
   <!-- /右侧二维码展示？ -->
   <!-- 主搜索栏 -->
@@ -80,15 +89,38 @@
         </form>
 
         <h3>持仓列表</h3>
-        {% for stock in ownedstock_list %}
-        <ul>
-        代码：{{ stock.code }}, 名称：{{ stock.name }}, 总余额：{{ stock.whole_balance }},
-        可用余额：{{ stock.available_balance }}, 冻结余额：{{ stock.blocked_balance }},
-        成本：{{ stock.cost }}, 价格：{{ stock.price }}
-        </ul>
-        {% empty %}
-        <ul>没有持仓股票</ul>
-        {% endfor %}
+            <article>
+              <table class="datatable table table-striped table-bordered" id="example">
+                <thead>
+                  <tr>
+                    <th>代码</th>
+                    <th>名称</th>
+                    <th>总余额</th>
+                    <th>可用余额</th>
+                    <th>冻结余额</th>
+                    <th>成本</th>
+                    <th>价格</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {% for stock in ownedstock_list %}
+                  <tr class="odd gradeX">
+                    <td>{{ stock.code }}</td>
+                    <td>{{ stock.name }}</td>
+                    <td>{{ stock.whole_balance }}</td>
+                    <td>{{ stock.available_balance }}</td>
+                    <td>{{ stock.blocked_balance }}</td>
+                    <td>{{ stock.cost }}</td>
+                    <td>{{ stock.price }}</td>
+                  </tr>
+                  {% empty %}
+                  没有持仓股票
+                  {% endfor %}
+                </tbody>
+
+              </table>
+            </article>
     </div>
     <!-- /Page container -->
 </div>
@@ -100,7 +132,7 @@
             <li><a class="wuxify-me" href="/mockexchange/userinfo/"><span class="icon-user"></span>账户信息</a></li>
             <li><a class="wuxify-me" href="/mockexchange/buy/"><span class="icon-shopping-cart"></span>买入</a></li>
             <li><a class="wuxify-me" href="/mockexchange/sell/"><span class="icon-upload-alt"></span>卖出</a></li>
-            <li><a class="wuxify-me" href="/mockexchange/cancel/"><span class="icon-undo"></span>撤销委托</a></li>
+            <li><a class="wuxify-me" href="/mockexchange/capital_rank/"><span class="icon-sort"></span>排行榜</a></li>
           </ul>
         </nav>
       </div>

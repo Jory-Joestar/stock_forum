@@ -6,6 +6,7 @@ from .models import Plate,Post,Comment,Information
 from .forms import PlateForm,PostForm,CommentForm,GetpriceForm,GetstockForm,GetgapForm
 from extends.get_price import GetPrice
 from extends.get_est import GetEst
+#from extends.get_stock_index import draw_index
 #使用中间件时，有些视图可能不需要设置X-Frame-Options标头。对于这些情况，可以使用视图装饰器告知中间件不要设置标头
 from django.views.decorators.clickjacking import xframe_options_exempt
 from users.models import UserProfile,FollowingStocks,User
@@ -17,6 +18,16 @@ import datetime
 # Create your views here.
 def index(request):
     '''论坛的主页'''
+    #画指数图
+    #draw_index()
+    #获取所有板块
+    plates=Plate.objects.all().exclude(text='__private__')
+    #获取前10名最热板块
+    hot_plates=plates.order_by('-hot')[:10]
+    #获得精选文章
+    hot_posts=Post.objects.all().exclude(plate__text='__private__').order_by('id')[:5]
+    #资产排行榜
+    capital_rank_list = UserProfile.objects.all().order_by('-capital')[:5]
     if request.method == 'POST':
         if 'search_plate' in request.POST:
             plate_name=request.POST['search_item']
@@ -28,7 +39,7 @@ def index(request):
             stock_name=request.POST['search_item']
             return HttpResponseRedirect(reverse('forum:get_stock_result',args=[stock_name]))
     informations=Information.objects.all().order_by('-date_added')
-    context={'informations':informations}
+    context={'informations':informations,'hot_plates':hot_plates,'hot_posts':hot_posts,'capital_rank_list':capital_rank_list,}
     return render(request,'forum/index.html',context)
 
 #@login_required
@@ -283,7 +294,7 @@ def get_stock_result(request,stock_name):
     '''查询结果页面'''
     refer=GetPrice()
     results=refer.get_related(stock_name)
-    context={'results':results}
+    context={'results':results,}
     return render(request,'forum/get_stock_result.html',context)
 
 def search_plate(request,plate_name):
@@ -317,7 +328,7 @@ def stock_info(request,stock_name):
     stock_code=result_price[0]
     current_price=result_price[1]
 
-    start_date=(datetime.date.today() + datetime.timedelta(days = -7)).strftime("%Y%m%d")
+    start_date=(datetime.date.today() + datetime.timedelta(days = -30)).strftime("%Y%m%d")
     end_date=(datetime.date.today() + datetime.timedelta(days = -1)).strftime("%Y%m%d")
     #end_date=datetime.datetime.now().strftime('%Y%m%d')
     print(start_date)

@@ -7,6 +7,7 @@ from django.db.models import Q
 import threading
 import tushare as ts
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 @login_required
 def index(request):
@@ -37,7 +38,7 @@ def userinfo(request):
     testuser = UserProfile.objects.get(owner=request.user)
 
     set_capital(testuser)
-    commission_list = testuser.commission_set.all()
+    commission_list = testuser.commission_set.all().order_by('-index')
     deal_list = testuser.deal_set.all()
     ownedstock_list = testuser.ownedstock_set.all()
     context_dict = {'user_name': testuser.owner.username, 'user_cash': testuser.cash, 'user_capital': testuser.capital,
@@ -66,16 +67,19 @@ def buy(request):
 
             # 验证输入
             if new_form.name == 'None':
-                return HttpResponse('该股票不存在')
+                messages.success(request,'该股票不存在')
+                return render(request, 'mockexchange/buy.html', {'form': form})
             if testuser.cash < new_form.amount * new_form.price:
-                return HttpResponse('资金不足')
+                messages.success(request,'资金不足')
+                return render(request, 'mockexchange/buy.html', {'form': form})
 
             new_form.save()
 
             testuser.cash = testuser.cash - new_form.amount * new_form.price
             testuser.capital = testuser.capital - new_form.amount * new_form.price
             testuser.save()
-            return index(request)
+            messages.success(request,'成功创建委托')
+            return render(request, 'mockexchange/buy.html', {'form': form})
         else:
             print(form.errors)
     return render(request, 'mockexchange/buy.html', {'form': form})
@@ -105,40 +109,44 @@ def sell(request):
             try:
                 owned_stock = OwnedStock.objects.get(user=testuser, code=new_form.code)
             except:
-                return HttpResponse('该股票可用余额不足')
+                messages.success(request,'该股票可用余额不足')
+                return render(request, 'mockexchange/sell.html', {'form': form,'ownedstock_list': ownedstock_list})
             else:
                 if owned_stock.available_balance >= new_form.amount:
                     owned_stock.available_balance = owned_stock.available_balance - new_form.amount
                     owned_stock.blocked_balance = owned_stock.blocked_balance + new_form.amount
                     owned_stock.save()
                     new_form.save()
-                    return index(request)
+                    messages.success(request,'成功创建委托')
+                    return render(request, 'mockexchange/sell.html', {'form': form,'ownedstock_list': ownedstock_list})
                 else:
-                    return HttpResponse('该股票可用余额不足')
+                    messages.success(request,'该股票可用余额不足')
+                    return render(request, 'mockexchange/sell.html', {'form': form,'ownedstock_list': ownedstock_list})
         else:
             print(form.errors)
     return render(request, 'mockexchange/sell.html', {'form': form,'ownedstock_list': ownedstock_list})
 
 @login_required
-def cancel(request):
+def cancel(request,commission_index):
     # 获取当前用户
     testuser = UserProfile.objects.get(owner=request.user)
     commission_list = testuser.commission_set.all()
 
-    form = CancelCommission()
-    if request.method == 'POST':
-        form = CancelCommission(request.POST)
-        if form.is_valid():
-            new_form = form.save(commit=False)
-            c = Commission.objects.get(user=testuser, index=new_form.index)
-            if c.note != '未成交':
-                return HttpResponse('该委托已成交或撤单')
-            c.note = '撤单'
-            c.save()
-            return index(request)
-        else:
-            print(form.errors)
-    return render(request, 'mockexchange/cancel.html', {'form': form,'commission_list': commission_list,})
+    c = Commission.objects.get(user=testuser, index=commission_index)
+    if c.note != '未成交':
+        messages.success(request,"该委托已成交或撤单")
+    else:
+        c.note = '撤单'
+        c.save()
+        messages.success(request,"撤单成功")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def capital_rank(request):
+    capital_rank_list = UserProfile.objects.all().order_by('-capital')
+    cash_rank_list = UserProfile.objects.all().order_by('-cash')
+    context={'capital_rank_list':capital_rank_list,'cash_rank_list':cash_rank_list}
+    return render(request,'mockexchange/capital_rank.html',context)
 
 @login_required
 def newthread(request):
@@ -264,4 +272,3 @@ class TradeThread(threading.Thread):
                     unblock_lastday_balance(user)
 
             time.sleep(3)
-

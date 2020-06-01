@@ -17,8 +17,8 @@ class CommissionForm(forms.ModelForm):
     name = forms.CharField(widget=forms.HiddenInput(), initial='None')
     operation = forms.CharField(widget=forms.HiddenInput(), initial='None')
     note = forms.CharField(widget=forms.HiddenInput(), initial='未成交')
-    amount = forms.IntegerField(initial=0, help_text="输入数量")
-    price = forms.FloatField(initial=0, help_text="输入价格")
+    amount = forms.IntegerField(initial=0, help_text="输入数量",min_value=100)
+    price = forms.FloatField(initial=0, help_text="输入价格",min_value=0)
     index = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 
     class Meta:
