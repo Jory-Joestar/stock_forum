@@ -104,6 +104,9 @@ def get_related_name(name, pro):
         basic_word = basic.loc[index]['name']
         basic_code = basic.loc[index]['ts_code']
         search_success = True
+        if basic_code == name or basic_code[0:6] == name:
+            name_list[basic_word]=basic_code
+            break
         for number in range(0, len(name)):
             if name[number] == ' ':
                 continue

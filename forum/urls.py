@@ -54,4 +54,6 @@ urlpatterns=[
     url(r'^unfollow_stock/(?P<stock_name>\S+)/$',views.unfollow_stock,name='unfollow_stock'),
     #股票预测页面
     url(r'^stock_est/(?P<stock_code>\S+)/$',views.stock_est ,name='stock_est'),
+    #消息通知
+    url(r'^informations/$',views.informations,name='informations'),
 ]

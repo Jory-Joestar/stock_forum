@@ -135,25 +135,18 @@
 
 
                 <section class="widget">
-                    <h2 class="title">我的文章</h2>
+                    <h2 class="title">作者的其他文章</h2>
                     <ul class="articles">
+                        {% for other_post in other_posts %}
                         <li class="article-entry standard">
-                            <h4><a href="single-article.html">文章标题</a></h4>
-                            <span class="article-meta">25 Feb, 2020 in <a href="#">所属板块</a></span>
-
+                            <h4><a href="{% url 'forum:show_post' other_post.id %}">{{ other_post.get_title }}</a></h4>
+                            <span class="article-meta">{{ other_post.date_added|date:'M d, Y H:i' }} in <a href="{% url 'forum:plate' other_post.plate.id %}" >{{ other_post.plate.text }}</a></span>                           
                         </li>
-                        <li class="article-entry standard">
-                            <h4><a href="single-article.html">文章标题</a></h4>
-                            <span class="article-meta">25 Feb, 2020 in <a href="#">所属板块</a></span>
+                        {% empty %}
+                        <li>
+                            没有找到该作者的其他文章。
                         </li>
-                        <li class="article-entry standard">
-                            <h4><a href="single-article.html">文章标题</a></h4>
-                            <span class="article-meta">25 Feb, 2020 in <a href="#">所属板块</a></span>
-                        </li>
-                        <li class="article-entry standard">
-                            <h4><a href="single-article.html">文章标题</a></h4>
-                            <span class="article-meta">25 Feb, 2020 in <a href="#">所属板块</a></span>
-                        </li>
+                        {% endfor %}
                     </ul>
                 </section>
 

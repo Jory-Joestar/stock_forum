@@ -26,11 +26,13 @@
     </h4>
     {% endif %}
 
-    <p>在这里编写你的文章：</p>
     <form action="{% url 'forum:new_post' plate.id %}" method="POST">
       {% csrf_token %}
-      {{form.as_p}}
-      <button name="submit">添加</button>
+      <h3>文章标题：</h3>
+      {{ form.title }}
+      <h3>文章内容：</h3>
+      {{ form.text }}
+      <button class="btn btn-primary" name="submit">添加</button>
     </form>
               
   </div>

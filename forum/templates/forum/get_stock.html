@@ -4,7 +4,7 @@
 {% block search %}
 <!-- 搜索栏 -->
 <div class="hero-unit blow">
-  <h1>搜索股票详情</h1>
+  <h1>查询股票信息</h1>
   <!-- 左边网站图片展示框 -->
   <div class="home-img">
     <img src="{% static 'img/template_logo.png' %}">
@@ -42,10 +42,10 @@
     <img src="{% static 'img/icon-hot.png' %}" /> 
     <span style="font-weight:bold;">热门搜索：</span>
     <!-- 为了好看 可以给他固定下来（字数比较重要 会影响排版） -->
-    <a href="#">热门搜索1</a>&nbsp&nbsp
-    <a href="#">热门搜索2</a>&nbsp&nbsp
-    <a href="#">热门搜索3</a>&nbsp&nbsp
-    <a href="#">热门搜索4</a>
+    <a href="{% url 'forum:stock_info' '南大光电' %}">南大光电</a>&nbsp&nbsp
+    <a href="{% url 'forum:stock_info' '浙大网新' %}">浙大网新</a>&nbsp&nbsp
+    <a href="{% url 'forum:stock_info' '北大医药' %}">北大医药</a>&nbsp&nbsp
+    <a href="{% url 'forum:stock_info' '科大讯飞' %}">科大讯飞</a>
   </div>
   
 </div>
@@ -59,7 +59,7 @@
   <!-- Page header -->
   <div class="page-header">
               
-    <h2>股票查询</h2>
+    <h1>股票搜索</h1>
 
   </div>
   <!-- /Page header -->
@@ -69,11 +69,11 @@
 
     <div>
         <form action="{% url 'forum:get_stock' %}" method="POST">
-            <span>请输入股票名称：</span>
-            <br>
+            <span><h3> 输入股票名称或股票代码：</h3>(填写股票代码时请注意代码的后缀，沪市股票：.SH; 深市股票：.SZ)</span>
+            <br><br>
             {% csrf_token %}
             {{form.as_p}}
-            <button type="submit">查询相关股票</button>
+            <button type="submit" class="btn btn-danger btn-wuxia">搜索相关股票</button>
         </form>
     </div>
               

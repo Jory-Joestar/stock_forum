@@ -32,7 +32,7 @@
 			<ul>
 				{% for post in posts %}
 				<li>
-					<a href="{% url 'forum:show_post' post.id %}" target="_top">{{ post }}</a>
+					<a href="{% url 'forum:show_post' post.id %}" target="_top">{{ post.get_title }}</a>
 					{% if selecteduser == user %}
 					<div class="divButton"><a href="{% url 'forum:del_post' post.id %}"><button type="submit">删除日志</button></a></div>
 					{% else %}
@@ -42,7 +42,7 @@
 				<li>还没有发表任何日志</li>
 				{% endfor %}
 				{% if selecteduser == user%}
-				<li><a href="{% url 'users:private_post' %}" target="_top">写日志</a></li>
+				<li><a href="{% url 'users:private_post' %}" target="_top"><button>写日志</button></a></li>
 				{% else %}
 				{% endif %}
 			</ul>

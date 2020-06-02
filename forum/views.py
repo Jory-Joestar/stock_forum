@@ -79,6 +79,8 @@ def plates(request):
 def plate(request,plate_id):
     '''显示某板块内的所有po文'''
     plate=Plate.objects.get(id=plate_id)
+    #获取用户在当前板块发表的文章
+    my_posts=Post.objects.filter(owner=request.user).filter(plate=plate)
     #获取用户对于当前板块的关注状态
     user=request.user
     profile=UserProfile.objects.get(owner=user)
@@ -89,7 +91,7 @@ def plate(request,plate_id):
         followed=False
     #确认请求的主题及其所有的条目
     posts=Post.objects.filter(plate=plate).order_by('-date_added')
-    context={'plate':plate,'posts':posts,'followed':followed}
+    context={'plate':plate,'posts':posts,'followed':followed,'my_posts':my_posts}
     return render(request,'forum/plate.html',context)
 
 @login_required
@@ -138,6 +140,7 @@ def show_post(request,post_id):
     '''文章详情页面，显示文章内容，文章的所有评论，添加评论，回复'''
     post=Post.objects.get(id=post_id)
     plate=post.plate
+    other_posts=Post.objects.exclude(plate__text='__private__').exclude(id=post_id).filter(owner=post.owner).order_by('-date_added')
     #获取用户的关注状态
     user=request.user
     profile=UserProfile.objects.get(owner=user)
@@ -161,7 +164,7 @@ def show_post(request,post_id):
             new_comment.save()
             return HttpResponseRedirect(reverse('forum:show_post',
             args=[post.id]))
-    context={'post':post,'comments':comments,'plate':plate,'followed':followed,'form':form}
+    context={'post':post,'comments':comments,'plate':plate,'followed':followed,'form':form,'other_posts':other_posts}
     return render(request,'forum/show_post.html',context)
 
 
@@ -208,11 +211,17 @@ def response_comment(request,comment_id):
     context={'comment':comment,'form':form,'post':post}
     return render(request,'forum/response_comment.html',context)
 
-@login_required
+#@login_required
 def show_dynamic(request):
     '''显示动态'''
+    #获取当前用户最近发表的文章
+    if request.user.is_authenticated:
+        my_posts=Post.objects.exclude(plate__text='__private__').filter(owner=request.user).order_by('-date_added')
+    else:
+        my_posts=[]
+    #获取所有用户最近发表的文章
     posts=Post.objects.all().exclude(plate__text='__private__').order_by('-date_added')
-    context={'posts':posts}
+    context={'posts':posts,'my_posts':my_posts}
     return render(request,'forum/show_dynamic.html',context)
 
 @login_required
@@ -444,7 +453,11 @@ def unfollow_stock(request,stock_name):
 @login_required
 def stock_est(request,stock_code):
     ''' 股票预测 '''
-    esting=GetEst(stock_code)
+    try:
+        esting=GetEst(stock_code)
+    except:
+        messages.success(request,"预测失败，可能因为股票上市过晚缺少数据所致。请尝试预测其他股票。")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if esting.error:
         return HttpResponse(esting.error)
     esting.plot_trends()
@@ -452,3 +465,9 @@ def stock_est(request,stock_code):
     remark=esting.remark()
     context={'forecast':forecast,'remark':remark,'stock_code':stock_code}
     return render(request,'forum/stock_est.html',context)
+
+@login_required
+def informations(request):
+    informations=Information.objects.all().order_by('-date_added')
+    context={'informations':informations}
+    return render(request,'forum/informations.html',context)

@@ -35,7 +35,7 @@ class Post(models.Model):
         if self.title:
             return self.title
         else:
-            return self.text[:5]+"..."
+            return self.text[:10]+"..."
 
 class Comment(models.Model):
     '''对于某条帖子的评论'''

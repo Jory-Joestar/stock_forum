@@ -99,8 +99,7 @@
 									<!-- 用户头像下简单的下拉菜单 -->
 									<li><a href="{% url 'users:user_space' user.id %}"><span class="icon-user"></span> 个人中心</a></li>
 									<li><a href="{% url 'users:private_post' %}"><span class="icon-edit"></span> 写日志</a></li>
-									<li><a href=""><span class="icon-bell"></span> 关注列表</a></li>
-									<li><a href=""><span class="icon-envelope"></span> 消息提醒</a></li>
+									<li><a href="{% url 'forum:informations' %}"><span class="icon-envelope"></span> 消息提醒</a></li>
 									<li class="divider"></li>
 									<li><a href="{% url 'users:logout' %}"><span class="icon-signout"></span> 登出</a></li>
 								</ul>
@@ -138,10 +137,9 @@
 			<nav>
 				<ul>
 					<li>&copy; Copyright 2020. All rights reserved.</li>
-					<li><a href="#">Documentation</a></li>
-					<li><a href="#">Support</a></li>
-					<li><a href="#">API</a></li>
-					<li><a href="#">Blog</a></li>
+					<li><a href="https://github.com/yangzi-fisher/stock_forum">Source</a></li>
+					<li><a href="https://github.com/yangzi-fisher/stock_forum/issues">Issue</a></li>
+					<li><a href="https://blog.csdn.net/Seb_Veeeettle/article/details/105749143">Blog</a></li>
 				</ul>
 			</nav>
 

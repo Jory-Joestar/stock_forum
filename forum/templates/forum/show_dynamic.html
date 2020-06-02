@@ -49,10 +49,10 @@
       <img src="{% static 'img/icon-hot.png' %}" /> 
       <span style="font-weight:bold;">热门搜索：</span>
       <!-- 为了好看 可以给他固定下来（字数比较重要 会影响排版） -->
-      <a href="#">热门搜索1</a>&nbsp&nbsp
-      <a href="#">热门搜索2</a>&nbsp&nbsp
-      <a href="#">热门搜索3</a>&nbsp&nbsp
-      <a href="#">热门搜索4</a>
+      <a href="{% url 'forum:stock_info' '南大光电' %}">南大光电</a>&nbsp&nbsp
+      <a href="{% url 'forum:stock_info' '浙大网新' %}">浙大网新</a>&nbsp&nbsp
+      <a href="{% url 'forum:stock_info' '北大医药' %}">北大医药</a>&nbsp&nbsp
+      <a href="{% url 'forum:stock_info' '科大讯飞' %}">科大讯飞</a>
     </div>
     
   </div>
@@ -106,26 +106,26 @@
                     
                 
                 <section class="widget">
+                    {% if user.is_authenticated %}
                     <h2 class="title">我的文章</h2>
                     <ul class="articles">
+                        {% for my_post in my_posts %}
                         <li class="article-entry standard">
-                            <h4><a href="single-article.html">文章标题</a></h4>
-                            <span class="article-meta">25 Feb, 2020 in <a href="#" >所属板块</a></span>
-                            
+                            <h4><a href="{% url 'forum:show_post' my_post.id %}">{{ my_post.get_title }}</a></h4>
+                            <span class="article-meta">{{ my_post.date_added|date:'M d, Y H:i' }} in <a href="{% url 'forum:plate' my_post.plate.id %}" >{{ my_post.plate.text }}</a></span>                           
                         </li>
-                        <li class="article-entry standard">
-                            <h4><a href="single-article.html">文章标题</a></h4>
-                            <span class="article-meta">25 Feb, 2020 in <a href="#" >所属板块</a></span>
+                        {% empty %}
+                        <li>
+                            你还没有在论坛发表过文章。
                         </li>
-                        <li class="article-entry standard">
-                            <h4><a href="single-article.html">文章标题</a></h4>
-                            <span class="article-meta">25 Feb, 2020 in <a href="#" >所属板块</a></span>
-                        </li>
-                        <li class="article-entry standard">
-                            <h4><a href="single-article.html">文章标题</a></h4>
-                            <span class="article-meta">25 Feb, 2020 in <a href="#" >所属板块</a></span>
-                        </li>
+                        {% endfor %}
+
                     </ul>
+                    {% else %}
+                    <h2 class="title">注册或登陆后即可发表文章</h2>
+                    <a href="{% url 'users:register' %}"><button class="btn btn-danger btn-wuxia" >注册</button></a>
+                    <a href="{% url 'users:login' %}"><button class="btn btn-danger btn-wuxia" >登陆</button></a>
+                    {% endif %}
                 </section>
 
             </aside>

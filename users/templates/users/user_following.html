@@ -84,13 +84,14 @@
 				<br />
 				<ul>
 					{% for post in following_post %}
-					<div>
-						<a href="{% url 'forum:show_post' post.id %}" target="_top">{{ post }}</a>
+					<li>
+						<a href="{% url 'forum:show_post' post.id %}" target="_top">{{ post.get_title }}</a>
 						{% if selecteduser == user %}
 						<div class="divButton"><a href="{% url 'forum:unfollow_post' post.id %}"><button type="submit">取消关注</button></a></div>
 						{% else %}
 						{% endif %}
-					</div>
+					</li>
+					<br>
 					{% empty %}
 					<li>还没有关注任何文章</li>
 					{% endfor %}

@@ -4,7 +4,7 @@
 {% block search %}
 <!-- 搜索栏 -->
 <div class="hero-unit blow">
-  <h1>搜索股票</h1>
+  <h1>消息通知</h1>
   <!-- 左边网站图片展示框 -->
   <div class="home-img">
     <img src="{% static 'img/template_logo.png' %}">
@@ -52,35 +52,47 @@
 <!-- /搜索栏 -->
 {% endblock search %}
 
-{% block describe %}
-<!-- 主页描述 -->
+
+{% block more %}
+
+{% for info in informations %}
+
 <div class="content">
 
-  <!-- Page header -->
-  <div class="page-header">
-              
-    <h1>搜索结果</h1>
-
-  </div>
-  <!-- /Page header -->
-
-  <!-- Page container -->
-  <div class="page-container">
-
-    <div>
-      <!-- 展示查询结果，做成a链接形式 -->
-      <ul>
-          {% for name,code in results.items %}
-          <li><a href="{% url 'forum:stock_info' name %}">{{ name }} ({{ code }})</a></li>
-          {% empty %}
-          <li>没有找到相关的股票</li>
-          {% endfor %}
-      </ul>
+    <!-- Page header -->
+    <div class="page-header">
+                
+        <h3>
+            通知 <small>--管理员: {{info.owner}}, 发布时间: {{ info.date_added|date:'M d, Y H:i' }}</small>
+        </h3>
+  
     </div>
-              
-  </div>
-  <!-- /Page container -->
+    <!-- /Page header -->
+  
+    <!-- Page container -->
+    <div class="page-container">
+  
+      <h3>通知内容：</h3>
+      {{ info.text|linebreaks }}
+                
+    </div>
+    <!-- /Page container -->
 </div>
-<!-- /主页描述 -->
-{% endblock describe %}
 
+{% empty %}
+<div class="content">
+
+    <!-- Page header -->
+    <div class="page-header">
+                
+        <h3>
+            目前没有消息
+        </h3>
+  
+    </div>
+    <!-- /Page header -->
+  
+</div>
+{% endfor %}
+
+{% endblock more %}

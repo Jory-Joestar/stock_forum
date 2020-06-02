@@ -6,6 +6,7 @@ class PlateForm(forms.ModelForm):
         model=Plate
         fields=['text']
         labels={'text':''}
+        widgets={'text':forms.Textarea(attrs={'class':'span11','cols':60,'rows':2}),}
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -30,7 +31,7 @@ class GetpriceForm(forms.Form):
 
 #按名称搜索股票的表单
 class GetstockForm(forms.Form):
-    stock_name = forms.CharField(label='股票名称', max_length=10, widget=forms.TextInput(attrs={'class': 'span8'}))
+    stock_name = forms.CharField(label='', max_length=10, widget=forms.TextInput(attrs={'class': 'span8'}))
 
 #获取日期区间
 class GetgapForm(forms.Form):

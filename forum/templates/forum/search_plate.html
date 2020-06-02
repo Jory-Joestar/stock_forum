@@ -1,4 +1,56 @@
 {% extends "forum/base.html" %}
+{% load static %}
+
+{% block search %}
+<!-- 搜索栏 -->
+<div class="hero-unit blow">
+  <h1>搜索板块</h1>
+  <!-- 左边网站图片展示框 -->
+  <div class="home-img">
+    <img src="{% static 'img/template_logo.png' %}">
+  </div>
+  <!-- 右侧二维码展示？放图片也行 -->
+  <div class="qr-code">
+    关
+    <br />
+    注
+    <br />
+    我
+    <br />
+    们
+    
+    <img src="{% static 'img/qr-code1.jpg' %}" /> 
+    <img src="{% static 'img/qr-code2.jpg' %}" />
+    <img src="{% static 'img/qr-code3.jpg' %}" />
+    <img src="{% static 'img/qr-code4.jpg' %}" />
+  </div>
+  <!-- /右侧二维码展示？ -->
+  <!-- 主搜索栏 -->
+  <div class="main-search">        
+        <form action="{% url 'forum:index' %}" method="POST" name="search">
+          {% csrf_token %}
+          <input  id="search-box" type="search" placeholder="请输入..." name="search_item" required/>&nbsp
+          <!-- 加事件监听 -->
+          <button type="submit" name="search_plate"><i>进板块</i></button>
+          <button type="submit" name="search_post"><i>查文章</i></button>
+          <button type="submit" name="search_stock"><i>搜股票</i></button>
+        </form>
+        
+  </div>
+  <!-- /主搜索栏 -->
+  <div class="hot-search">
+    <img src="{% static 'img/icon-hot.png' %}" /> 
+    <span style="font-weight:bold;">热门搜索：</span>
+    <!-- 为了好看 可以给他固定下来（字数比较重要 会影响排版） -->
+    <a href="{% url 'forum:stock_info' '南大光电' %}">南大光电</a>&nbsp&nbsp
+    <a href="{% url 'forum:stock_info' '浙大网新' %}">浙大网新</a>&nbsp&nbsp
+    <a href="{% url 'forum:stock_info' '北大医药' %}">北大医药</a>&nbsp&nbsp
+    <a href="{% url 'forum:stock_info' '科大讯飞' %}">科大讯飞</a>
+  </div>
+  
+</div>
+<!-- /搜索栏 -->
+{% endblock search %}
 
 {% block describe %}
 <!-- 主页描述 -->
@@ -7,7 +59,7 @@
   <!-- Page header -->
   <div class="page-header">
               
-    <p>查询结果</p>
+    <h1>搜索结果</h1>
 
   </div>
   <!-- /Page header -->

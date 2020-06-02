@@ -46,10 +46,10 @@
     <img src="{% static 'img/icon-hot.png' %}" /> 
     <span style="font-weight:bold;">热门搜索：</span>
     <!-- 为了好看 可以给他固定下来（字数比较重要 会影响排版） -->
-    <a href="#">热门搜索1</a>&nbsp&nbsp
-    <a href="#">热门搜索2</a>&nbsp&nbsp
-    <a href="#">热门搜索3</a>&nbsp&nbsp
-    <a href="#">热门搜索4</a>
+    <a href="{% url 'forum:stock_info' '南大光电' %}">南大光电</a>&nbsp&nbsp
+    <a href="{% url 'forum:stock_info' '浙大网新' %}">浙大网新</a>&nbsp&nbsp
+    <a href="{% url 'forum:stock_info' '北大医药' %}">北大医药</a>&nbsp&nbsp
+    <a href="{% url 'forum:stock_info' '科大讯飞' %}">科大讯飞</a>
   </div>
   
 </div>

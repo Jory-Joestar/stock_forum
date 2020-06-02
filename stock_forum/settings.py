@@ -28,9 +28,9 @@ MEDIA_DIR=os.path.join(BASE_DIR,'media')
 SECRET_KEY = 'mip8dz4y5ka_6cl(75c2lswh9hjso^dh9dzemzc=v6+g83r5--'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','0.0.0.0']
 
 
 # Application definition
@@ -65,7 +65,7 @@ ROOT_URLCONF = 'stock_forum.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'stock_forum/templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
