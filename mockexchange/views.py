@@ -58,15 +58,24 @@ def buy(request):
         form = CommissionForm(request.POST)
         if form.is_valid():
             new_form = form.save(commit=False)
-            new_form.user=testuser
-            new_form.name = stock_basic.select_basic_code(new_form.code, pro).name
+
+           # 改动的部分
+            if new_form.code[0]<'0' or new_form.code[0]>'9':
+                new_form.user = testuser
+                new_form.name = new_form.code
+                new_form.code = stock_basic.select_basic_name(new_form.name, pro).code
+            else:
+                new_form.user = testuser
+                new_form.name = stock_basic.select_basic_code(new_form.code, pro).name
             new_form.operation = '买入'
+            # 改动的部分
+
             # 输入序号，第1个序号为0，第2个序号为1
             commission_list = testuser.commission_set.all()
             new_form.index = len(commission_list)
 
             # 验证输入
-            if new_form.name == 'None':
+            if new_form.name == 'None' or new_form.code == 'None':
                 messages.success(request,'该股票不存在')
                 return render(request, 'mockexchange/buy.html', {'form': form})
             if testuser.cash < new_form.amount * new_form.price:
@@ -100,8 +109,17 @@ def sell(request):
         form = CommissionForm(request.POST)
         if form.is_valid():
             new_form = form.save(commit=False)
-            new_form.user=testuser
-            new_form.name = stock_basic.select_basic_code(new_form.code, pro).name
+
+           # 改动的部分
+            if new_form.code[0]<'0' or new_form.code[0]>'9':
+                new_form.user = testuser
+                new_form.name = new_form.code
+                new_form.code = stock_basic.select_basic_name(new_form.name, pro).code
+            else:
+                new_form.user = testuser
+                new_form.name = stock_basic.select_basic_code(new_form.code, pro).name
+            # 改动的部分
+
             new_form.operation = '卖出'
             # 输入序号，第1个序号为0，第2个序号为1
             commission_list = testuser.commission_set.all()
