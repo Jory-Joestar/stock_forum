@@ -143,6 +143,7 @@ def cancel(request,commission_index):
         c.note = '撤单'
         c.save()
         testuser.cash = testuser.cash + c.price * c.amount
+        testuser.capital = testuser.capital + c.price * c.amount
         testuser.save()
         messages.success(request,"撤单成功")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -180,6 +181,9 @@ class TradeThread(threading.Thread):
                             continue
 
                         if commission.operation == '买入':
+                            current_price = ts.get_realtime_quotes(commission.code[0:6]).loc[0]['price']
+                            if commission.price < float(current_price):
+                                continue
                             commission.note = '已成交'
                             commission.save()
 
@@ -241,6 +245,9 @@ class TradeThread(threading.Thread):
                                 set_capital(commission.user)
 
                         elif commission.operation == '卖出':
+                            current_price = ts.get_realtime_quotes(commission.code[0:6]).loc[0]['price']
+                            if commission.price > float(current_price):
+                                continue
                             commission.note = '已成交'
                             commission.save()
 
