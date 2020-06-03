@@ -73,6 +73,8 @@ def buy(request):
                 messages.success(request,'资金不足')
                 return render(request, 'mockexchange/buy.html', {'form': form})
 
+            new_form.date=time.strftime("%Y%m%d", time.localtime())
+            new_form.time1=time1=time.strftime("%H:%M:%S", time.localtime())
             new_form.save()
 
             testuser.cash = testuser.cash - new_form.amount * new_form.price
@@ -116,6 +118,8 @@ def sell(request):
                     owned_stock.available_balance = owned_stock.available_balance - new_form.amount
                     owned_stock.blocked_balance = owned_stock.blocked_balance + new_form.amount
                     owned_stock.save()
+                    new_form.date=time.strftime("%Y%m%d", time.localtime())
+                    new_form.time1=time1=time.strftime("%H:%M:%S", time.localtime())
                     new_form.save()
                     messages.success(request,'成功创建委托')
                     return render(request, 'mockexchange/sell.html', {'form': form,'ownedstock_list': ownedstock_list})
@@ -138,6 +142,8 @@ def cancel(request,commission_index):
     else:
         c.note = '撤单'
         c.save()
+        testuser.cash = testuser.cash + c.price * c.amount
+        testuser.save()
         messages.success(request,"撤单成功")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
