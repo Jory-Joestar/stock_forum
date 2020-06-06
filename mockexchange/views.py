@@ -27,6 +27,7 @@ def unblock_lastday_balance(mockuser):
     for owned_stock in OwnedStock.objects.filter(user=mockuser):
         owned_stock.blocked_balance = owned_stock.blocked_balance - owned_stock.thisday_blocked_balance
         owned_stock.whole_balance = owned_stock.whole_balance + owned_stock.thisday_blocked_balance
+        owned_stock.available_balance = owned_stock.available_balance + owned_stock.thisday_blocked_balance
         owned_stock.thisday_blocked_balance = 0
         owned_stock.save()
 

@@ -336,6 +336,10 @@ def stock_info(request,stock_name):
     result_price=refer.current_price(stock_name)
     stock_code=result_price[0]
     current_price=result_price[1]
+    rise_fall=result_price[2]
+    if_rise=rise_fall[0]
+    change=rise_fall[1]
+    pct_chg=rise_fall[2]
 
     start_date=(datetime.date.today() + datetime.timedelta(days = -30)).strftime("%Y%m%d")
     end_date=(datetime.date.today() + datetime.timedelta(days = -1)).strftime("%Y%m%d")
@@ -344,7 +348,8 @@ def stock_info(request,stock_name):
     print(end_date)
     refer.draw_kline(stock_name,start_date,end_date)
 
-    context={'stock_name':stock_name,'current_price':current_price,'followed':followed,'stock_code':stock_code}
+    context={'stock_name':stock_name,'current_price':current_price,'followed':followed,'stock_code':stock_code,
+    'if_rise':if_rise,'change':change,'pct_chg':pct_chg}
     return render(request,'forum/stock_info.html',context)
 
 @xframe_options_exempt

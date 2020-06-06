@@ -14,7 +14,8 @@ class GetPrice():
     def current_price(self, stock_name):
         stock = select_basic_name(stock_name, self.pro)
         stock_code=verified_code(stock.code)
-        return (stock_code,stock.get_current_price())
+        rise_fall=stock.rise_fall()
+        return (stock_code,stock.get_current_price(),rise_fall)
 
     def draw_kline(self, stock_name, start_date, end_date):
         stock = select_basic_name(stock_name, self.pro)

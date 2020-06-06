@@ -88,6 +88,21 @@ class Stock(object):
         time = df.loc[0]['time']
         return current_price
 
+    def rise_fall(self):
+        '''获得涨跌幅'''
+        token = 'c89761557a8c339b857a2fedebea03685aee396dd2501d063d7271fd'
+        ts.set_token(token)
+        pro = ts.pro_api(token)
+        df = pro.daily(ts_code=self.code)
+        last_close = float(df.close[0])
+        current_price = float(self.get_current_price())
+        change = float(format(current_price - last_close, '.3f'))
+        pct_chg = float(format(100*change/last_close, '.4f'))
+        if_rise = 1
+        if change < 0:
+            if_rise = 0
+        return [if_rise, change, pct_chg]
+
 
 def get_basic(pro):
     # 股票代码、简称、注册地、行业、上市时间等信息

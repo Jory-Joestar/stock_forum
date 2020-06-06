@@ -29,7 +29,13 @@
   <div class="page-container">
 
     <div>
-      <h3>实时价格：&nbsp;&nbsp;{{ current_price }}</h3>
+      <h3>实时价格：&nbsp;&nbsp;{{ current_price }}&nbsp;
+        {% if if_rise == 1 %}
+        <font color="red"><span class="icon-arrow-up"></span> {{ change }} , +{{ pct_chg }}%</font>
+        {% else %}
+        <font color="green"><span class="icon-arrow-down"></span> {{ change }} , {{ pct_chg }}%</font>
+        {% endif %}
+      </h3>
       <br>
     </div>
     <div>
