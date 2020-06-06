@@ -13,7 +13,7 @@ class CommissionForm(forms.ModelForm):
 
     date = forms.CharField(widget=forms.HiddenInput(), initial=time.strftime("%Y%m%d", time.localtime()))
     time1 = forms.CharField(widget=forms.HiddenInput(), initial=time.strftime("%H:%M:%S", time.localtime()))
-    code = forms.CharField(max_length=128, help_text="输入代码")
+    code = forms.CharField(max_length=128, help_text="输入代码或股票名")
     name = forms.CharField(widget=forms.HiddenInput(), initial='None')
     operation = forms.CharField(widget=forms.HiddenInput(), initial='None')
     note = forms.CharField(widget=forms.HiddenInput(), initial='未成交')

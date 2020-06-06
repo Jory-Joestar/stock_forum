@@ -5,6 +5,28 @@
 
 # Change Log  
 
+v1.4.3 (2020/6/6 16:00)
+* 买卖股票可以输入股票名了
+* 股票详情可以显示股票的涨跌幅了
+* 修复了买入卖出价格限制的bug
+* 修复了模拟交易撤单之后现金不能恢复的bug
+* 修复了第二天解冻余额可用余额没有增加的bug
+
+v1.4.2 (2020/6/2 23:30)  
+* 设计了404页面和500页面
+* 模拟交易的委托、成交、持仓列表使用了统一风格的table  
+* 文章详情右侧的栏目设置了一些相关文章  
+* 首页设置了收藏按钮，填充了热门搜索、推荐股票等链接  
+* 修复了一些bug  
+
+v1.4.1 (2020/6/1 15:00)  
+* 网站换了新的logo  
+* 首页的动图换成了大盘走势  
+* 股票预测页面设置了跳转动画  
+* 股票查询页面和查询结果页面重新排版  
+* 模拟交易设计了排行榜  
+* 近期行情的k线图时间跨度变长了  
+
 v1.4.0 (2020/5/30 16:30)  
 * 股票模拟交易系统上线  
   * 用户可查看个人账户信息  
@@ -47,50 +69,79 @@ v0.0.0 (2020/4/19 20:30)
 django==3.0.4  
 django-bootstrap3==12.0.3  
 pandas==1.0.3  
+pandas-datareader==0.8.1  
 pyecharts==0.5.11  
 pyecharts-snapshot==0.2.0  
 tushare==1.2.54  
+numpy==1.18.2  
+tensorflow==2.0.0  
 
 # 安装
 配置好上述环境和依赖库之后，将本项目移植到本地，在控制台中打开项目目录  
 输入python manage.py migrate迁移数据库  
-输入python manage.py runserver 如果运行成功，访问localhost:8000即可正常使用  
+输入python manage.py runserver --insecure如果运行成功，访问localhost:8000即可正常使用  
 输入python manage.py createsuperuser 创建超级管理员  
 超级管理员可登陆localhost:8000/admin管理所有数据  
 
 # 目录结构
-> /stock_forum：项目配置目录  
->>    /settings.py:项目的setting文件，在里面注册安装的应用，文件的路径等等  
->>    /urls.py：定义url模式，将访问定向到应用或视图函数  
->>    /wsgi.py:本地运行不需要改动，django自带文件  
->>    /asgi.py:同上  
+* /stock_forum：项目配置目录  
+  * /settings.py:项目的setting文件，在里面注册安装的应用，文件的路径等等  
+  * /urls.py：定义url模式，将访问定向到应用或视图函数  
+  * /wsgi.py:本地运行不需要改动，django自带文件  
+  * /asgi.py:同上  
 
->/forum：django项目应用，论坛功能实现  
->>    /migrations:有关数据库的设定，用于迁移数据库  
->>    /templates/forum:HTML模板文件夹  
->>    /admin.py：用于注册可管理的数据模型  
->>    /apps.py:django自带，没动  
->>    /forms.py：定义表单类，用于获取用户输入的数据  
->>    /models.py:定义模型类，操作数据库数据  
->>    /test.py:测试模块，没动  
->>    /urls.py:定义url模式，将访问定向到视图函数  
->>    /views.py：定义视图函数，处理用户的访问和请求  
+* /forum：django项目应用，论坛功能实现  
+  * /migrations：有关数据库的设定，用于迁移数据库  
+  * /templates/forum：HTML模板文件夹  
+  * /admin.py：用于注册可管理的数据模型  
+  * /apps.py：django自带，没动  
+  * /forms.py：定义表单类，用于获取用户输入的数据  
+  * /models.py：定义模型类，操作数据库数据  
+  * /test.py：测试模块，没动  
+  * /urls.py：定义url模式，将访问定向到视图函数  
+  * /views.py：定义视图函数，处理用户的访问和请求  
 
->/users:django项目应用，实现用户管理  
->>    /migrations:有关数据库的设定，用于迁移数据库  
->>    /templates/forum:HTML模板文件夹  
->>    /admin.py：用于注册可管理的数据模型  
->>    /apps.py:django自带，没动  
->>    /forms.py：定义表单类，用于获取用户输入的数据  
->>    /models.py:定义模型类，操作数据库数据  
->>    /test.py:测试模块，没动  
->>    /urls.py:定义url模式，将访问定向到视图函数  
->>    /views.py：定义视图函数，处理用户的访问和请求  
+* /users：django项目应用，实现用户管理  
+  * /migrations：有关数据库的设定，用于迁移数据库  
+  * /templates/forum：HTML模板文件夹  
+  * /admin.py：用于注册可管理的数据模型  
+  * /apps.py：django自带，没动  
+  * /forms.py：定义表单类，用于获取用户输入的数据  
+  * /models.py：定义模型类，操作数据库数据  
+  * /test.py：测试模块，没动  
+  * /urls.py：定义url模式，将访问定向到视图函数  
+  * /views.py：定义视图函数，处理用户的访问和请求  
 
->/extends:拓展功能模块  
->>    /data：数据源模块  
->>>        /stock_basic.py：从API获得股票价格数据，生产数据集，k线图  
->>    /get_price.py：获得股票价格，供forum应用中的视图函数调用  
+* /mockexchange：django项目应用，实现股票模拟交易  
+  * /migrations：有关数据库的设定，用于迁移数据库  
+  * /templates/forum：HTML模板文件夹  
+  * /admin.py：用于注册可管理的数据模型  
+  * /apps.py：django自带，没动  
+  * /forms.py：定义表单类，用于获取用户输入的数据  
+  * /models.py：定义模型类，操作数据库数据  
+  * /test.py：测试模块，没动  
+  * /urls.py：定义url模式，将访问定向到视图函数  
+  * /views.py：定义视图函数，处理用户的访问和请求
 
->/manage.py:django项目控制模块，没动  
+* /extends:拓展功能模块  
+  * /data：数据源模块  
+    * /stock_basic.py：从API获得股票价格数据，生产数据集，k线图  
+    * /stock_est.py：预测股票价格，画趋势图的功能函数  
+  * /get_price.py：获得股票价格，供forum应用中的视图函数调用  
+  * /get_est.py：股票预测类，供forum应用中的视图函数调用  
+  * /get_stock_index.py：画大盘走势图  
+
+* /static：静态文件夹，存放js,css,图片等文件  
+  * /404style：存放404页面的css文件  
+  * /css：包含网站整体风格的css文件  
+  * /images：网站的一些图标和图片  
+  * /img：也是网站的一些图标和图片  
+  * /js：包含网页的js代码  
+  * /klines：存放程序输出的k线图，用于展示给用户  
+  * /trends：存放程序输出的大盘走势图，用于展示给用户  
+
+* /media：媒体文件夹，存放用户上传的文件  
+  * /profile_images：存放用户上传的头像  
+
+* /manage.py:django项目控制模块，没动  
 
