@@ -84,13 +84,13 @@ tensorflow==2.0.0
 超级管理员可登陆localhost:8000/admin管理所有数据  
 
 # 目录结构
-* /stock_forum：项目配置目录  
+* /stock_forum：项目配置目录
   * /settings.py:项目的setting文件，在里面注册安装的应用，文件的路径等等  
   * /urls.py：定义url模式，将访问定向到应用或视图函数  
   * /wsgi.py:本地运行不需要改动，django自带文件  
   * /asgi.py:同上  
 
-* /forum：django项目应用，论坛功能实现  
+* /forum：django项目应用，论坛功能实现
   * /migrations：有关数据库的设定，用于迁移数据库  
   * /templates/forum：HTML模板文件夹  
   * /admin.py：用于注册可管理的数据模型  
@@ -101,7 +101,7 @@ tensorflow==2.0.0
   * /urls.py：定义url模式，将访问定向到视图函数  
   * /views.py：定义视图函数，处理用户的访问和请求  
 
-* /users：django项目应用，实现用户管理  
+* /users：django项目应用，实现用户管理
   * /migrations：有关数据库的设定，用于迁移数据库  
   * /templates/forum：HTML模板文件夹  
   * /admin.py：用于注册可管理的数据模型  
@@ -112,7 +112,7 @@ tensorflow==2.0.0
   * /urls.py：定义url模式，将访问定向到视图函数  
   * /views.py：定义视图函数，处理用户的访问和请求  
 
-* /mockexchange：django项目应用，实现股票模拟交易  
+* /mockexchange：django项目应用，实现股票模拟交易
   * /migrations：有关数据库的设定，用于迁移数据库  
   * /templates/forum：HTML模板文件夹  
   * /admin.py：用于注册可管理的数据模型  
@@ -123,15 +123,15 @@ tensorflow==2.0.0
   * /urls.py：定义url模式，将访问定向到视图函数  
   * /views.py：定义视图函数，处理用户的访问和请求
 
-* /extends:拓展功能模块  
-  * /data：数据源模块  
+* /extends:拓展功能模块
+  * /data：数据源模块
     * /stock_basic.py：从API获得股票价格数据，生产数据集，k线图  
     * /stock_est.py：预测股票价格，画趋势图的功能函数  
   * /get_price.py：获得股票价格，供forum应用中的视图函数调用  
   * /get_est.py：股票预测类，供forum应用中的视图函数调用  
   * /get_stock_index.py：画大盘走势图  
 
-* /static：静态文件夹，存放js,css,图片等文件  
+* /static：静态文件夹，存放js,css,图片等文件
   * /404style：存放404页面的css文件  
   * /css：包含网站整体风格的css文件  
   * /images：网站的一些图标和图片  
@@ -140,7 +140,7 @@ tensorflow==2.0.0
   * /klines：存放程序输出的k线图，用于展示给用户  
   * /trends：存放程序输出的大盘走势图，用于展示给用户  
 
-* /media：媒体文件夹，存放用户上传的文件  
+* /media：媒体文件夹，存放用户上传的文件
   * /profile_images：存放用户上传的头像  
 
 * /manage.py:django项目控制模块，没动  
